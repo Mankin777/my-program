@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Color Game</title>
+
+<style>
+    /* Ministry Header Styling */
+.ministry-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 4px solid gold;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  margin-bottom: 2rem;
+}
+
+.ministry-title h1 {
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  letter-spacing: 1px;
+  margin: 0;
+  background: linear-gradient(135deg, #fff, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  color: #ffd700;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+/* Make it responsive for mobile */
+@media (max-width: 768px) {
+  .ministry-title h1 {
+    font-size: 1.1rem;
+  }
+ 
+  .tagline {
+    font-size: 0.7rem;
+  }
+ 
+  .ministry-header {
+    padding: 1rem;
+  }
+}
+
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg, #1e1e2f, #3a3a5f);
+    color: white;
+    text-align: center;
+}
+
+.container {
+    margin-top: 50px;
+}
+
+input {
+    padding: 12px;
+    margin: 10px;
+    width: 220px;
+    border-radius: 8px;
+    border: none;
+}
+
+button {
+    padding: 12px 20px;
+    background: orange;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: darkorange;
+}
+
+#colorBox {
+    height: 120px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.admin {
+    margin-top: 40px;
+}
+</style>
+</head>
+
+<body>
+<header class="ministry-header">
+  <div class="ministry-title">
+    <h1>✝️ THE PROLIFIC TEENS AND YOUTH MINISTRY ✝️</h1>
+    <p class="tagline">Raising a Generation of Purpose | Excellence | Faith</p>
+  </div>
+</header>
+<div class="container">
+    <h2>🎉 Color Game 🎉</h2>
+
+    <input id="name" placeholder="Enter Name"><br>
+    <input id="zone" placeholder="Enter Zone"><br>
+
+    <button onclick="play()">Spin 🎡</button>
+
+    <div id="result"></div>
+    <div id="colorBox"></div>
+</div>
+
+<div class="admin">
+    <h3>Admin Panel</h3>
+    <button onclick="loadPlayers()">View Players</button>
+    <button onclick="resetGame()">Reset Game</button>
+
+    <pre id="playersList"></pre>
+</div>
+
+<script>
+async function play() {
+    let name = document.getElementById("name").value;
+    let zone = document.getElementById("zone").value;
+
+    let res = await fetch("/play", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, zone })
+    });
+
+    let data = await res.json();
+
+    if (data.error) {
+        alert(data.error);
+        return;
+    }
+
+    document.getElementById("result").innerHTML = `
+        🎉 Result 🎉 <br>
+        Name: ${data.name}<br>
+        Zone: ${data.zone}<br>
+        Color: ${data.color}
+    `;
+
+    document.getElementById("colorBox").style.background = data.color.toLowerCase();
+}
+
+// ADMIN FUNCTIONS
+async function loadPlayers() {
+    let res = await fetch("/players");
+    let data = await res.json();
+
+    document.getElementById("playersList").textContent =
+        JSON.stringify(data, null, 2);
+}
+
+async function resetGame() {
+    await fetch("/reset", { method: "POST" });
+    alert("Game reset!");
+}
+</script>
+
+</body>
+</html>
