@@ -91,6 +91,13 @@ button:hover {
 .admin {
     margin-top: 40px;
 }
+
+.admin-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
 </style>
 </head>
 
@@ -101,6 +108,7 @@ button:hover {
     <p class="tagline">Raising a Generation of Purpose | Excellence | Faith</p>
   </div>
 </header>
+
 <div class="container">
     <h2>🎉 Color Game 🎉</h2>
 
@@ -113,15 +121,49 @@ button:hover {
     <div id="colorBox"></div>
 </div>
 
-<div class="admin">
-    <h3>Admin Panel</h3>
-    <button onclick="loadPlayers()">View Players</button>
-    <button onclick="resetGame()">Reset Game</button>
+<!-- Admin Login Section -->
+<div id="adminLoginSection" class="admin-section">
+  <h3>🔐 Admin Login</h3>
+  <input type="password" id="adminPassword" placeholder="Enter admin password">
+  <button onclick="loginToAdmin()">Login</button>
+  <div id="loginMessage" style="color: red; margin-top: 10px;"></div>
+</div>
 
-    <pre id="playersList"></pre>
+<!-- Admin Panel (hidden by default) -->
+<div id="adminPanel" style="display: none;" class="admin-section">
+  <h3>🛠️ Admin Panel</h3>
+  <button onclick="loadPlayers()">View Players</button>
+  <button onclick="resetGame()">Reset Game</button>
+  <button onclick="addColor()">Add New Color</button>
+  <input type="text" id="newColorName" placeholder="Color name (e.g., Cyan)" style="margin-top: 10px;">
+  <br>
+  <pre id="playersList"></pre>
 </div>
 
 <script>
+async function loginToAdmin() {
+  const password = document.getElementById('adminPassword').value;
+  
+  try {
+    const response = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      document.getElementById('adminLoginSection').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+    } else {
+      document.getElementById('loginMessage').innerText = 'Wrong password!';
+    }
+  } catch (error) {
+    document.getElementById('loginMessage').innerText = 'Login failed';
+  }
+}
+
 async function play() {
     let name = document.getElementById("name").value;
     let zone = document.getElementById("zone").value;
@@ -153,16 +195,35 @@ async function play() {
 
 // ADMIN FUNCTIONS
 async function loadPlayers() {
-    let res = await fetch("/players");
+    let res = await fetch("/api/players");
     let data = await res.json();
-
-    document.getElementById("playersList").textContent =
-        JSON.stringify(data, null, 2);
+    document.getElementById("playersList").textContent = JSON.stringify(data, null, 2);
 }
 
 async function resetGame() {
-    await fetch("/reset", { method: "POST" });
-    alert("Game reset!");
+    if(confirm("Reset all players?")) {
+        await fetch("/api/admin/players", { method: "DELETE" });
+        alert("Game reset! All players deleted.");
+        document.getElementById("playersList").textContent = "";
+    }
+}
+
+async function addColor() {
+    let colorName = document.getElementById("newColorName").value;
+    if(!colorName) {
+        alert("Enter a color name!");
+        return;
+    }
+    
+    let res = await fetch("/api/admin/colors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: colorName, value: colorName })
+    });
+    
+    let data = await res.json();
+    alert(data.message);
+    document.getElementById("newColorName").value = "";
 }
 </script>
 
