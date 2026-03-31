@@ -6,9 +6,21 @@ app.use(express.json());
 app.use(express.static("public"));
 
 const colors = ["Red", "Green", "Purple", "Yellow", "White", "Pink"];
+const ADMIN_PASSWORD = "ADMIN123";
 
 // Store players
 let players = {};
+
+// Admin login endpoint
+app.post('/api/admin/login', (req, res) => {
+  const { password } = req.body;
+  
+  if (password === ADMIN_PASSWORD) {
+    res.json({ success: true, message: "Login successful" });
+  } else {
+    res.status(401).json({ success: false, message: "Invalid password" });
+  }
+});
 
 // PLAY ROUTE
 app.post("/play", (req, res) => {
