@@ -22,6 +22,19 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
+// Add new color
+app.post('/api/admin/colors', (req, res) => {
+    const { name, value } = req.body;
+    colors.push(name);
+    res.json({ message: `Added ${name}` });
+});
+
+// Delete all players
+app.delete('/api/admin/players', (req, res) => {
+    players = [];
+    res.json({ message: "All players deleted" });
+});
+
 // PLAY ROUTE
 app.post("/play", (req, res) => {
     let { name, zone } = req.body;
