@@ -321,14 +321,14 @@ async function loginToAdmin() {
 
 async function play() {
     let name = document.getElementById("name").value;
-    let zone = document.getElementById("zone").value;
+    let zone = document.getElementById("zones").value;
 
     let res = await fetch("/play", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ name, zone })
+        body: JSON.stringify({ name, zones })
     });
 
     let data = await res.json();
@@ -341,7 +341,7 @@ async function play() {
     document.getElementById("result").innerHTML = `
         🎉 Result 🎉 <br>
         Name: ${data.name}<br>
-        Zone: ${data.zone}<br>
+        Zones: ${data.zones}<br>
         Color: ${data.color}
     `;
 

@@ -42,14 +42,17 @@ app.delete('/api/admin/players', (req, res) => {
 
 // PLAY ROUTE
 app.post("/play", (req, res) => {
-    let { name, zone } = req.body;
+    let { name, zones } = req.body;
+    let zone = zones;
+   
 
-    if (!name || !zone) {
+    if (!name || !zones) {
         return res.json({ error: "Fill all fields!" });
     }
 
     name = name.trim();
-    zone = zone.trim();
+    zones = zones.trim();
+
 
     // Check if player already exists
     const existingPlayer = players.find(p => p.name === name);
@@ -64,13 +67,13 @@ app.post("/play", (req, res) => {
 
     players.push({
         name: name,
-        zone: zone,
+        zones: zones,
         color: randomColor
     });
 
     res.json({
         name,
-        zone,
+        zones,
         color: randomColor
     });
 });
