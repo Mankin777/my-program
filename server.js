@@ -65,9 +65,9 @@ app.post("/play", async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to save player" });
-  }
+  console.error("FULL ERROR:", err);
+  res.status(500).json({ error: err.message });
+}
 });
 
 // ✅ Get players
