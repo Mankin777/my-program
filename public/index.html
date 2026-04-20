@@ -196,7 +196,7 @@ async function play() {
 
         // 🎡 SPIN
         const wheel = document.getElementById("wheel");
-        let degrees = 360 * 5 + (data.index * (360 / 6));
+        let degrees = 360 * 6 + (data.index * (360 / 6));
         wheel.style.transform = `rotate(${degrees}deg)`;
 
         // 🎉 SHOW RESULT AFTER SPIN
