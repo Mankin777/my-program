@@ -2,23 +2,44 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 app.use(express.json());
 app.use(express.static("public"));
 
+// 🎨 Colors (6 segments)
 const colors = ["Red", "Green", "Purple", "Yellow", "White", "Pink"];
+
 const ADMIN_PASSWORD = "admin123";
 
 // ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log("✅ MongoDB Connected"))
-.catch(err => console.error("❌ MongoDB Error:", err));
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch(err => console.error("❌ MongoDB Error:", err));
 
-// ✅ Schema FIRST
+/* =========================
+   🧠 HELPER FUNCTIONS
+========================= */
+
+// Normalize name (remove spaces + lowercase)
+function normalizeName(name) {
+  return name.toLowerCase().replace(/\s+/g, "").trim();
+}
+
+// Check similarity (anti-cheat)
+function isSimilarName(name1, name2) {
+  return name1.includes(name2) || name2.includes(name1);
+}
+
+/* =========================
+   🧱 SCHEMA
+========================= */
+
 const playerSchema = new mongoose.Schema({
   name: String,
+  normalizedName: String,
   zones: String,
+  ip: String,
   color: String,
   createdAt: {
     type: Date,
@@ -28,10 +49,13 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model("Player", playerSchema);
 
-// ✅ Admin login
-app.post('/api/admin/login', (req, res) => {
+/* =========================
+   🔐 ADMIN LOGIN
+========================= */
+
+app.post("/api/admin/login", (req, res) => {
   const { password } = req.body;
-  
+
   if (password === ADMIN_PASSWORD) {
     res.json({ success: true });
   } else {
@@ -39,38 +63,80 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
-// ✅ Play route (MongoDB save)
+/* =========================
+   🎡 PLAY ROUTE (ANTI-CHEAT)
+========================= */
+
 app.post("/play", async (req, res) => {
   const { name, zones } = req.body;
 
   if (!name || !zones) {
-    return res.json({ error: "Missing fields" });
+    return res.json({ error: "⚠️ Please fill all fields" });
   }
 
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  const normalizedName = normalizeName(name);
+
+  const userIP =
+    req.headers["x-forwarded-for"]?.split(",")[0] ||
+    req.socket.remoteAddress;
 
   try {
+    // 🔍 1. Check same IP + similar name
+    const playersFromSameIP = await Player.find({ ip: userIP });
+
+    for (let player of playersFromSameIP) {
+      if (isSimilarName(player.normalizedName, normalizedName)) {
+        return res.json({
+          error: "⚠️ You already played (same device detected)"
+        });
+      }
+    }
+
+    // 🔍 2. Check same name + same zone
+    const existingSameZone = await Player.findOne({
+      normalizedName,
+      zones
+    });
+
+    if (existingSameZone) {
+      return res.json({
+        error: "⚠️ You already played in this zone"
+      });
+    }
+
+    // 🎡 Spin result
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    const randomColor = colors[randomIndex];
+
     const player = new Player({
       name,
+      normalizedName,
       zones,
+      ip: userIP,
       color: randomColor
     });
 
     await player.save();
 
     res.json({
+      success: true,
       name,
       zones,
-      color: randomColor
+      color: randomColor,
+      index: randomIndex // 🔥 used for wheel rotation
     });
 
   } catch (err) {
-  console.error("FULL ERROR:", err);
-  res.status(500).json({ error: err.message });
-}
+    console.error("FULL ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// ✅ Get players
+/* =========================
+   📊 ADMIN ROUTES
+========================= */
+
+// Get players
 app.get("/api/players", async (req, res) => {
   try {
     const players = await Player.find().sort({ createdAt: -1 });
@@ -80,7 +146,7 @@ app.get("/api/players", async (req, res) => {
   }
 });
 
-// ✅ Reset players
+// Reset players
 app.delete("/api/admin/players", async (req, res) => {
   try {
     await Player.deleteMany({});
@@ -90,12 +156,16 @@ app.delete("/api/admin/players", async (req, res) => {
   }
 });
 
-// ✅ Add new color
-app.post('/api/admin/colors', (req, res) => {
+// Add new color
+app.post("/api/admin/colors", (req, res) => {
   const { name } = req.body;
   colors.push(name);
   res.json({ message: `Added ${name}` });
 });
+
+/* =========================
+   🚀 START SERVER
+========================= */
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -5,52 +5,7 @@
 <title>Color Game</title>
 
 <style>
-    /* Ministry Header Styling */
-/*Created by King, the son of God 😁*/
-.ministry-header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  padding: 1.5rem;
-  text-align: center;
-  border-bottom: 4px solid gold;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  margin-bottom: 2rem;
-}
-
-.ministry-title h1 {
-  color: white;
-  font-size: 1.8rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-  letter-spacing: 1px;
-  margin: 0;
-  background: linear-gradient(135deg, #fff, #ffd700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.tagline {
-  color: #ffd700;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-  font-style: italic;
-  letter-spacing: 1px;
-}
-
-/* Make it responsive for mobile */
-@media (max-width: 768px) {
-  .ministry-title h1 {
-    font-size: 1.1rem;
-  }
- 
-  .tagline {
-    font-size: 0.7rem;
-  }
- 
-  .ministry-header {
-    padding: 1rem;
-  }
-}
+/*Created by King 😁*/
 
 body {
     font-family: Arial;
@@ -59,8 +14,24 @@ body {
     text-align: center;
 }
 
+/* HEADER */
+.ministry-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 1.5rem;
+  border-bottom: 4px solid gold;
+  margin-bottom: 2rem;
+}
+
+.ministry-title h1 {
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, #fff, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* FORM */
 .container {
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 input {
@@ -83,16 +54,33 @@ button:hover {
     background: darkorange;
 }
 
-#colorBox {
-    height: 120px;
-    margin-top: 20px;
-    border-radius: 10px;
+/* 🎡 WHEEL */
+.wheel-container {
+  position: relative;
+  width: 260px;
+  margin: 20px auto;
 }
 
-.admin {
-    margin-top: 40px;
+.wheel {
+  width: 100%;
+  transition: transform 4s ease-out;
 }
 
+.arrow {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+}
+
+/* RESULT */
+#result {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+/* ADMIN */
 .admin-section {
     margin-top: 30px;
     padding: 20px;
@@ -103,235 +91,94 @@ button:hover {
 </head>
 
 <body>
+
 <header class="ministry-header">
   <div class="ministry-title">
     <h1>✝️ THE PROLIFIC TEENS AND YOUTH MINISTRY ✝️</h1>
-    <p class="tagline">Raising a Generation of Purpose | Excellence | Faith</p>
+    <p>Raising a Generation of Purpose | Excellence | Faith</p>
   </div>
 </header>
 
 <div class="container">
     <h2>🎉 Color Game 🎉</h2>
-<label><i><b>Enter your name:</b></i></label><br>
-    <input id="name" placeholder="Enter Name"><br><br>
-   <label><i><b>Select your zone from the drop down list:</b></i></label><br>
-<input list="zonal" id="zones" name="zone" placeholder="enter/search zone name here">
-<datalist id="zonal">
-  <option value="CE GBERIGBE GHOSEN HOUSE 2">
-  <option value="CE MIES EMBAJADA DE CRISTO VENEZUELA">
-  <option value="CE WEALTHY PLACE OWODE">
-  <option value="CE 77 STEPS OGBA">
-  <option value="CE AA 2 CHAMPIONS ARENA YOUTH CHURCH">
-  <option value="CE AA 2 FLOURISHING CENTER">
-  <option value="CE AA 2 KINGSTON JAMAICA">
-  <option value="CE AA1 GLORY PLACE">
-  <option value="CE AA2 SANTO DOMINGO">
-  <option value="CE AA2 DUNAMIS">
-  <option value="CE AA2 FAISALABAD, PAKISTAN">
-  <option value="CE AA2 LANGUAGE (YORUBA ) CHURCH">
-  <option value="CE AA2 RHEMA CENTRE">
-  <option value="CE AA2 SIALKOT PAKISTAN">
-  <option value="CE ABULE">
-  <option value="CE ABULE IJOKO">
-  <option value="CE ABULE OJO LANGUAGE CHURCH EST">
-  <option value="CE ABUNDANT GRACE CENTRE">
-  <option value="CE ADAMO">
-  <option value="CE ADEBIMPE">
-  <option value="CE ADEGBITE/AKALA">
-  <option value="CE ADEKUNLE">
-  <option value="CE Adeyemi">
-  <option value="CE ADIYAN">
-  <option value="CE AGAPE CENTER AA 2">
-  <option value="CE AGBADO 1">
-  <option value="CE AGBADO 2">
-  <option value="CE AGBEDE TRANSFORMER">
-  <option value="CE AGBELE">
-  <option value="CE AGBOWA">
-  <option value="CE AGEGE">
-  <option value="CE AGEGE 2">
-  <option value="CE AGEGE 3">
-  <option value="CE AGEGE 4">
-  <option value="CE AGILITI 1">
-  <option value="CE AGUNFOYE">
-  <option value="CE Agunfoye Praise Church">
-  <option value="CE AINA">
-  <option value="CE AINA 3">
-  <option value="CE AIYEGBAMI SAGAMU">
-  <option value="CE AIYEPE">
-  <option value="CE AJEGUNLE 1-PROSPERITY CENTER">
-  <option value="CE AJEGUNLE 2">
-  <option value="CE AJUWON (AKUTE)">
-  <option value="CE AJUWON, Ifako Iju">
-  <option value="CE AKALA">
-  <option value="CE Akilo">
-  <option value="CE AKILO 1">
-  <option value="CE AKINSANYA">
-  <option value="CE AKOKA">
-  <option value="CE AKUTE">
-  <option value="CE ALAGBOLE">
-  <option value="CE ALAPERE (DAY SPRING)">
-  <option value="CE ALAPERE - GRACE LIGHT">
-  <option value="CE ALASIA">
-  <option value="CE ANIBABA">
-  <option value="CE ANTHONY 1">
-  <option value="CE ANTHONY 1 LANGUAGE CHURCH">
-  <option value="CE ANTHONY 2">
-  <option value="CE APAKUN">
-  <option value="CE APEKA">
-  <option value="CE AREA COMMAND">
-  <option value="CE ASHADE -DOMINION CENTRE">
-  <option value="CE ASO ROCK">
-  <option value="CE ASOLO">
-  <option value="CE AVIATION">
-  <option value="CE AVIATION 3">
-  <option value="CE AWESOME CENTER ISM">
-  <option value="CE AYANBODE OKEIRA">
-  <option value="CE AYOBO- TESTIMONY CENTER">
-  <option value="CE BAALE 1">
-  <option value="CE Barracks">
-  <option value="CE BOLA">
-  <option value="CE BOUNDLESS GRACE 2 ALAGBOLE">
-  <option value="CE CAPITOL">
-  <option value="CE CEMENT FAVOUR ARENA">
-  <option value="CE CENTRAL">
-  <option value="CE CHAMPIONS ARENA 2">
-  <option value="CE CHAMPIONS ZONE MANGORO 4">
-  <option value="CE CHARITY">
-  <option value="CE CHATTARPUR EXTENSION">
-  <option value="CE CMS AKOKA">
-  <option value="CE CODE RABAH EHINTA">
-  <option value="CE COKER">
-  <option value="CE COLOMBIA">
-  <option value="CE COLOMBIA MAINLAND 2">
-  <option value="CE COMMAND- FRUITFUL">
-  <option value="CE COMMUNITY AREA OGIJIO">
-  <option value="CE COSTA RICA">
-  <option value="CE COUNTY">
-  <option value="CE CUBA">
-  <option value="CE DAVLI ROAD">
-  <option value="CE DAYSPRING PORT HARCOURT">
-  <option value="CE DUNAMIS LOVE CENTER IDERA">
-  <option value="CE DWARKAR">
-  <option value="CE DYNAMIC CHURCH">
-  <option value="CE EBUTE">
-  <option value="CE EBUTEE 2">
-  <option value="CE ECUADOR">
-  <option value="CE EGBEDA">
-  <option value="CE EKORO (DAVID'S COURT)">
-  <option value="CE ELEBIJU">
-  <option value="CE ELLIOT">
-  <option value="CE ENCLAVE 1">
-  <option value="CE ERIYO">
-  <option value="CE ESTATE">
-  <option value="CE EXCEL CHURCH">
-  <option value="CE EXCELLENCE CENTER">
-  <option value="CE EXCEPTIONAL CHURCH">
-  <option value="CE EXPANSION ARENA">
-  <option value="CE EYITA">
-  <option value="CE FADEYI 1">
-  <option value="CE FADEYI 2">
-  <option value="CE FAGBA">
-  <option value="CE FAITH ARENA">
-  <option value="CE FERRYCHURCH AKOKA">
-  <option value="CE FIRST GATE">
-  <option value="CE FLOURISHING CENTER (Ketu Group)">
-  <option value="CE FLOURISHING CENTER N 2 PAKO AKOWONJO">
-  <option value="CE GALILEE 1">
-  <option value="CE GALILEE 2(PUPOSOLA)">
-  <option value="CE GALILEE 3(GIWA)">
-  <option value="CE GALILEE 6(Havilah Center)">
-  <option value="CE Galilee 7 (Prosperity Center)">
-  <option value="CE GALILEE YOUTH CHURCH">
-  <option value="CE GBAGA">
-  <option value="CE GBERIGBE GOSHEN HOUSE">
-  <option value="CE GIWA">
-  <option value="CE GIWA 2">
-  <option value="CE GLORY ARENA">
-  <option value="CE GLORY CHURCH ISM">
-  <option value="CE GLORY HEIGHT">
-  <option value="CE GLORY HOUSE 2">
-  <option value="CE GLORY PLACE">
-  <option value="CE GLORY PLACE 3">
-  <option value="CE GLORY PLACE 2">
-  <option value="CE GLORY PLACE 4">
-  <option value="CE GRACE">
-  <option value="CE GRACE ARENA (EKORO)">
-  <option value="CE GRACE ARENA OGBA">
-  <option value="CE GRACE CENTRE">
-  <option value="CE Graceland">
-  <option value="CE GREEN FIELDS">
-  <option value="CE GREEN TOWN PAKISTAN">
-  <option value="CE GUATEMALA">
-  <option value="CE HARUNA">
-  <option value="CE HARVEST ARENA">
-  <option value="CE HAVANA 2">
-  <option value="CE HEAVEN ARENA">
-  <option value="CE House of Grace IKD East">
-  <option value="CE IDIOROGBO">
-  <option value="CE ZOE NATION">
-</datalist><br><br>
+
+    <input id="name" placeholder="Enter Name"><br>
+
+    <input list="zonal" id="zones" placeholder="Enter/Search Zone"><br>
+
+    <datalist id="zonal">
+      <option value="CE AGEGE">
+      <option value="CE AKUTE">
+      <option value="CE AGBADO 1">
+      <option value="CE AGBADO 2">
+      <option value="CE ALAGBOLE">
+    </datalist>
 
     <button onclick="play()">Spin 🎡</button>
 
+    <!-- 🎡 WHEEL -->
+    <div class="wheel-container">
+        <img src="wheel.png" id="wheel" class="wheel">
+        <img src="arrow.png" class="arrow">
+    </div>
+
     <div id="result"></div>
-    <div id="colorBox"></div>
 </div>
 
-<!-- Admin Login Section --> 
+<!-- ADMIN -->
 <div id="adminLoginSection" class="admin-section">
   <h3>🔐 Admin Login</h3>
-  <input type="password" id="adminPassword" placeholder="Enter admin password">
+  <input type="password" id="adminPassword" placeholder="Password">
   <button onclick="loginToAdmin()">Login</button>
-  <div id="loginMessage" style="color: red; margin-top: 10px;"></div>
+  <div id="loginMessage" style="color:red;"></div>
 </div>
 
-<!-- Admin Panel (hidden by default) -->
-<div id="adminPanel" style="display: none;" class="admin-section">
+<div id="adminPanel" style="display:none;" class="admin-section">
   <h3>🛠️ Admin Panel</h3>
   <button onclick="loadPlayers()">View Players</button>
   <button onclick="resetGame()">Reset Game</button>
-  <button onclick="addColor()">Add New Color</button>
-  <input type="text" id="newColorName" placeholder="Color name (e.g., Cyan)" style="margin-top: 10px;">
-  <br>
+  <br><br>
+  <input id="newColorName" placeholder="New Color">
+  <button onclick="addColor()">Add</button>
   <pre id="playersList"></pre>
 </div>
 
 <script>
+
+// 🔐 ADMIN LOGIN
 async function loginToAdmin() {
   const password = document.getElementById('adminPassword').value;
-  
-  try {
-    const response = await fetch('https://my-program-irq7.onrender.com/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password })
-    });
-    
-    const data = await response.json();
-    
-    if (data.success) {
-      document.getElementById('adminLoginSection').style.display = 'none';
-      document.getElementById('adminPanel').style.display = 'block';
-    } else {
-      document.getElementById('loginMessage').innerText = 'Wrong password!';
-    }
-  } catch (error) {
-    document.getElementById('loginMessage').innerText = 'Login failed';
+
+  const res = await fetch('/api/admin/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    document.getElementById('adminLoginSection').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+  } else {
+    document.getElementById('loginMessage').innerText = "Wrong password!";
   }
 }
 
+// 🎡 PLAY FUNCTION
 async function play() {
 
     let name = document.getElementById("name").value;
     let zones = document.getElementById("zones").value;
 
     if (!name || !zones) {
-        alert("Please fill all fields");
+        document.getElementById("result").innerHTML =
+        "<span style='color:red;'>⚠️ Fill all fields</span>";
         return;
     }
 
     try {
-        let res = await fetch("https://my-program-irq7.onrender.com/play", {
+        let res = await fetch("/play", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -339,63 +186,61 @@ async function play() {
             body: JSON.stringify({ name, zones })
         });
 
-        console.log("Response:", res);
-
         let data = await res.json();
-        console.log("Data:", data);
 
         if (data.error) {
-            alert(data.error);
+            document.getElementById("result").innerHTML =
+            `<span style="color:red;">${data.error}</span>`;
             return;
         }
 
-        document.getElementById("result").innerHTML = `
-            🎉 Result 🎉 <br>
-            Name: ${data.name}<br>
-            Zones: ${data.zones}<br>
-            Color: ${data.color}
-        `;
+        // 🎡 SPIN
+        const wheel = document.getElementById("wheel");
+        let degrees = 360 * 5 + (data.index * (360 / 6));
+        wheel.style.transform = `rotate(${degrees}deg)`;
 
-        document.getElementById("colorBox").style.background = data.color.toLowerCase();
+        // 🎉 SHOW RESULT AFTER SPIN
+        setTimeout(() => {
+            document.getElementById("result").innerHTML = `
+                🎉 Result 🎉 <br>
+                Name: ${data.name}<br>
+                Zone: ${data.zones}<br>
+                Color: ${data.color}
+            `;
+        }, 4000);
 
     } catch (err) {
-        console.error("ERROR:", err);
-        alert("Something went wrong. Check console.");
+        document.getElementById("result").innerHTML =
+        "<span style='color:red;'>❌ Error occurred</span>";
     }
 }
 
 // ADMIN FUNCTIONS
 async function loadPlayers() {
-    let res = await fetch("https://my-program-irq7.onrender.com/api/players");
+    let res = await fetch("/api/players");
     let data = await res.json();
     document.getElementById("playersList").textContent = JSON.stringify(data, null, 2);
 }
 
 async function resetGame() {
     if(confirm("Reset all players?")) {
-        await fetch("https://my-program-irq7.onrender.com/api/admin/players", { method: "DELETE" });
-        alert("Game reset! All players deleted.");
-        document.getElementById("playersList").textContent = "";
+        await fetch("/api/admin/players", { method: "DELETE" });
+        alert("Game reset!");
     }
 }
 
 async function addColor() {
-    let colorName = document.getElementById("newColorName").value;
-    if(!colorName) {
-        alert("Enter a color name!");
-        return;
-    }
-    
-    let res = await fetch("https://my-program-irq7.onrender.com/api/admin/colors", {
+    let name = document.getElementById("newColorName").value;
+
+    await fetch("/api/admin/colors", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: colorName, value: colorName })
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ name })
     });
-    
-    let data = await res.json();
-    alert(data.message);
-    document.getElementById("newColorName").value = "";
+
+    alert("Color added!");
 }
+
 </script>
 
 </body>
