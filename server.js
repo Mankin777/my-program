@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // 🎨 Colors (6 segments)
-const colors = ["Red", "Green", "Purple", "Yellow", "White", "Pink"];
+const colors = ["Red", "yellow", "green", "pink", "white", "Purple"];
 
 const ADMIN_PASSWORD = "admin123";
 
