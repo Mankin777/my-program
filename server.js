@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // 🎨 Colors (6 segments) - UPDATED ORDER
-const colors = ["Red", "Purple", "White", "pink", "Green", "Yellow"];
+const colors = ["Purple", "White", "Pink", "Green", "Yellow", "Red"];
 
 const ADMIN_PASSWORD = "admin123";
 
