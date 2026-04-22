@@ -7,8 +7,8 @@ const mongoose = require("mongoose");
 app.use(express.json());
 app.use(express.static("public"));
 
-// 🎨 Colors (6 segments)
-const colors = ["Red", "white", "green", "yellow", "purple", "pink"];
+// 🎨 Colors (6 segments) - UPDATED ORDER
+const colors = ["Red", "Purple", "White", "pink", "Green", "Yellow"];
 
 const ADMIN_PASSWORD = "admin123";
 
@@ -104,7 +104,7 @@ app.post("/play", async (req, res) => {
       });
     }
 
-    // 🎡 Spin result
+    // 🎡 Spin result (0 to 5 index)
     const randomIndex = Math.floor(Math.random() * colors.length);
     const randomColor = colors[randomIndex];
 
@@ -123,7 +123,7 @@ app.post("/play", async (req, res) => {
       name,
       zones,
       color: randomColor,
-      index: randomIndex // 🔥 used for wheel rotation
+      index: randomIndex // 🔥 0=Red,1=White,2=Green,3=Yellow,4=Purple,5=Pink
     });
 
   } catch (err) {

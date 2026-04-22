@@ -521,7 +521,7 @@ async function loginToAdmin() {
   }
 }
 
-// 🎡 PLAY FUNCTION
+// 🎡 PLAY FUNCTION - UPDATED for 6 colors (60° each)
 async function play() {
 
     let name = document.getElementById("name").value;
@@ -550,9 +550,13 @@ async function play() {
             return;
         }
 
-        // 🎡 SPIN
+        // 🎡 SPIN - 6 colors means each segment is 60°
+        // 6 full rotations (2160°) + (index × 60°) to land on correct color
+        const SEGMENT_DEGREES = 60;  // 360° ÷ 6 colors = 60° per color
+        const FULL_ROTATIONS = 360 * 6; // 6 full spins
+        let degrees = FULL_ROTATIONS + (data.index * SEGMENT_DEGREES);
+        
         const wheel = document.getElementById("wheel");
-        let degrees = 360 * 6 + (data.index * (360 / 6));
         wheel.style.transform = `rotate(${degrees}deg)`;
 
         // 🎉 SHOW RESULT AFTER SPIN
