@@ -470,7 +470,7 @@ button:hover {
       <option value="CE ZOE NATION">
 </datalist>
 
-    <button onclick="play(), savename()">Spin 🎡</button>
+    <button onclick="play()">Spin 🎡</button>
 
     <!-- 🎡 WHEEL -->
     <div class="wheel-container">
@@ -479,8 +479,8 @@ button:hover {
     </div>
 
     <div id="result"></div>
-    <nav>
-<a href="conditionalStatements.html"> Click to check current time </a></nav>
+
+<button onclick="checkFunction()">Click to check current time</button>
 </div>
 
 <!-- ADMIN -->
@@ -502,6 +502,21 @@ button:hover {
 </div>
 
 <script>
+
+  //now the function will only run if the spin() runs
+
+async function checkFunction() {
+
+    let success = await play(); // change this based on your condition
+
+    if(success){
+        window.open("conditionalStatements.html", "_blank");
+    }
+    else{
+        alert("Function failed");
+    }
+}
+
 
 // 🔐 ADMIN LOGIN
 async function loginToAdmin() {
@@ -529,7 +544,7 @@ async function play() {
    const username =
         document.getElementById("name").value;
 
-    localStorage.setItem("username", username);
+    localStorage.setItem("u-name", username);
 
     let name = document.getElementById("name").value;
     let zones = document.getElementById("zones").value;
@@ -576,15 +591,18 @@ async function play() {
             `;
         }, 4000);
 
-    } catch (err) {
+    }      catch (err) {
         document.getElementById("result").innerHTML =
         "<span style='color:red;'>❌ Error occurred</span>";
+        
+        return false;
     }
+
+    return true;
 }
 
-<nav>
-<a href="conditionalStatements.html"> Click to check current time </a></nav>
-// ADMIN FUNCTIONSA
+
+// ADMIN FUNCTIONS
 async function loadPlayers() {
     let res = await fetch("/api/players");
     let data = await res.json();
