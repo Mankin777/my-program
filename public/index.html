@@ -502,9 +502,10 @@ button:hover {
 </div>
 
 <script>
+// Track if user has successfully spun
+let hasSpunSuccessfully = false;
 
   //now the function will only run if the spin() runs
-
 async function checkFunction() {
     // Check if user has spun successfully first
     if (!hasSpunSuccessfully) {
@@ -630,8 +631,7 @@ async function addColor() {
 
     alert("Color added!");
 }
-// Track if user has successfully spun
-let hasSpunSuccessfully = false;
+
 </script>
 
 </body>

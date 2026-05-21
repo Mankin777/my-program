@@ -170,7 +170,7 @@ function getQueryParam(param) {
     if (!name || name === "null" || name === "") {
         name = "Guest";
     }
-    
+
         let datee = String(date).padStart(2, "0");
         let fulyear = String(fullyear).padStart(2, "0");
         let monthy = String(month).padStart(2, "0");
@@ -242,14 +242,35 @@ document.getElementById("twoday").innerHTML = today;
 
 function startClock(){
     const tick = document.getElementById("ticksound");
-    setInterval(()=>{
-tick.currentTime = 0;
-tick.play();
+    let audioStarted = false;
+    
+    function playTick() {
+        if (audioStarted) {
+            tick.currentTime = 0;
+            tick.play().catch(e => console.log("Tick error:", e));
+        }
     }
-    , 60000);
+    
+    function enableAudio() {
+        if (audioStarted) return;
+        audioStarted = true;
+        tick.play().then(() => {
+            console.log("Audio enabled!");
+        }).catch(e => console.log("Audio error:", e));
+        
+        // Remove the event listener after first click
+        document.body.removeEventListener('click', enableAudio);
+    }
+    
+    // Wait for user click to enable audio (browser policy)
+    document.body.addEventListener('click', enableAudio);
+    
+    // Start the ticking interval
+    setInterval(playTick, 60000);
 }
-// makes the startclock() fuction start immediately 
-    window.onload = function () {
+
+// makes the startclock() function start immediately 
+window.onload = function () {
     startClock();
 };
     </script>
