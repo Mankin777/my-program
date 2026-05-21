@@ -138,6 +138,14 @@ padding:0;
         div.className = "position";
          document.getElementById("maggi").appendChild(div);
        
+
+         // Get name from URL parameter
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+
        function continuity(){
         const now = new Date();
         const date = now.getDate();
@@ -155,7 +163,14 @@ padding:0;
             hour12 = 12;
         }
         
-        var name = localStorage.getItem("u-name");
+         let name = getQueryParam('name');
+    if (!name) {
+        name = localStorage.getItem("u-name");
+    }
+    if (!name || name === "null" || name === "") {
+        name = "Guest";
+    }
+    
         let datee = String(date).padStart(2, "0");
         let fulyear = String(fullyear).padStart(2, "0");
         let monthy = String(month).padStart(2, "0");

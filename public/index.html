@@ -506,11 +506,12 @@ button:hover {
   //now the function will only run if the spin() runs
 
 async function checkFunction() {
-
-    let success = await play(); // change this based on your condition
-
+    let success = await play();
+    
     if(success){
-        window.open("conditionalStatements.html", "_blank");
+        const username = document.getElementById("name").value;
+        // Pass name in URL instead of localStorage
+        window.open(`conditionalStatements.html?name=${encodeURIComponent(username)}`, "_blank");
     }
     else{
         alert("Function failed");
