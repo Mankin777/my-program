@@ -506,16 +506,15 @@ button:hover {
   //now the function will only run if the spin() runs
 
 async function checkFunction() {
-    let success = await play();
+    // Check if user has spun successfully first
+    if (!hasSpunSuccessfully) {
+        alert("⚠️ Please spin the wheel first before checking the time!");
+        return;
+    }
     
-    if(success){
-        const username = document.getElementById("name").value;
-        // Pass name in URL instead of localStorage
-        window.open(`conditionalStatements.html?name=${encodeURIComponent(username)}`, "_blank");
-    }
-    else{
-        alert("Function failed");
-    }
+    // Only proceed if spin was successful
+    const username = document.getElementById("name").value;
+    window.open(`conditionalStatements.html?name=${encodeURIComponent(username)}`, "_blank");
 }
 
 
@@ -582,6 +581,9 @@ async function play() {
         const wheel = document.getElementById("wheel");
         wheel.style.transform = `rotate(${degrees}deg)`;
 
+ //Mark that spin was successful
+hasSpunSuccessfully = true;
+
         // 🎉 SHOW RESULT AFTER SPIN
         setTimeout(() => {
             document.getElementById("result").innerHTML = `
@@ -596,10 +598,10 @@ async function play() {
         document.getElementById("result").innerHTML =
         "<span style='color:red;'>❌ Error occurred</span>";
         
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 
@@ -628,7 +630,8 @@ async function addColor() {
 
     alert("Color added!");
 }
-
+// Track if user has successfully spun
+let hasSpunSuccessfully = false;
 </script>
 
 </body>
