@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+<title>
+    
+</title>
+<style type = "text/css">
+    .text{
+        color : red;
+    }
+    .placing{
+        display: flex;
+        justify-content: center;
+        gap:20px;
+    }
+
+    .time-display{
+    color:red;
+    font-size:30px;
+     display: flex;
+        justify-content: center;
+}
+.username{
+    color: purple;
+    font-style: italic;
+    font-family: Playfair Display;
+}
+.clock-wrapper{
+ display: flex;
+ justify-content: center;
+ align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+}
+.clock {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+}
+.pinpoint{
+    position: absolute;
+    top: 22.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    color: blue;
+    text-align: center;
+
+    z-index: 10; /* 🔥 THIS FIXES IT */
+}
+.d-date{
+    color:aqua;
+    position:absolute;
+    top:25.9%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    font-size:12.5px;
+    text-align:center;
+    font-family:'Courier New', Courier, monospace;
+    z-index:10;
+}
+.position{
+    color:red;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+.main-message{
+        color : red;
+    display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+    text-align:center;
+    z-index: 13;
+}
+
+.sub-message{
+        color : red;
+    display:flex;
+justify-content:center;
+gap:20px;
+flex-wrap:wrap;
+    text-align:center;
+    margin-top:10px;
+    font-size:20px;
+    z-index: 13;
+}
+.clock-face{
+    width: 30%;
+    display: block;
+    height:30%;
+}
+
+.hour-hand,
+.minute-hand,.second-hand{
+    position: absolute;
+ top: 14.4%;
+    left: 50%;
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+}
+.hour-hand {
+    width: 23%;
+}
+
+.minute-hand {
+    width: 26%;
+}
+.second-hand{
+    width: 24%;
+}
+ body{
+background-color:black;
+font-family:Arial, Helvetica, sans-serif;
+margin:0;
+padding:0;
+    font-family: Arial, Helvetica, sans-serif;
+       }
+</style>
+</head>
+<body>
+    <h1 id="maggi" >Javascript conditional statements</h1>
+
+ 
+<script  >
+        const div = document.createElement("div");
+        div.className = "position";
+         document.getElementById("maggi").appendChild(div);
+       
+       function continuity(){
+        const now = new Date();
+        const date = now.getDate();
+        const fullyear = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        const second = now.getSeconds();
+        
+        let message;
+       
+        var period;
+        let hour12 = hour%12;
+        if(hour12 == 0){
+            hour12 = 12;
+        }
+        
+        var name = localStorage.getItem("username");
+        let datee = String(date).padStart(2, "0");
+        let fulyear = String(fullyear).padStart(2, "0");
+        let monthy = String(month).padStart(2, "0");
+        let min = String(minute).padStart(2, "0");
+        let sec = String(second).padStart(2, "0");
+        period = hour >= 12 ? "PM":"AM";
+        let LCperiod= hour >= 12 ? "pm":"am";
+        
+       let timeshow = `${hour12}:${min}:${sec} ${LCperiod}`;
+         let today = `${datee} : ${monthy} : ${fulyear}`;
+         
+
+         const secondDeg = second * 6;
+    const minuteDeg = minute * 6 + second * 0.1;
+    const hourDeg = hour12 * 30 + minute * 0.5;
+
+    document.querySelector(".hour-hand").style.transform =
+        `translate(-50%, -50%) rotate(${hourDeg}deg)`;
+
+    document.querySelector(".minute-hand").style.transform =
+        `translate(-50%, -50%) rotate(${minuteDeg}deg)`;
+
+        document.querySelector(".second-hand").style.transform = 
+        `translate(-50%, -50%) rotate(${secondDeg}deg)`;
+
+        
+        if(hour < 12 && hour >= 0 ){
+message =`
+<div class="main-message">
+Good Morning <span class="username">${name}</span>
+it's ${hour12}:${min} ${period}
+</div>
+
+<div class="sub-message">
+~ (${min} minutes after ${hour12})
+</div>
+`;
+        }
+        else if (hour >= 12 && hour < 16) {
+            message = `
+<div class="main-message">
+Good Afternoon <span class="username">${name}</span>
+it's ${hour12}:${min} ${period}
+</div>
+
+<div class="sub-message">
+~ (${min} minutes after ${hour12})
+</div>
+`;
+        } else {
+           message = `
+<div class="main-message">
+Good Evening <span class="username">${name}</span>
+it's ${hour12}:${min} ${period}
+</div>
+
+<div class="sub-message">
+~ (${min} minutes after ${hour12})
+</div>
+`;
+        }
+div.innerHTML = message;
+document.getElementById("dark").innerHTML = timeshow;
+document.getElementById("twoday").innerHTML = today;
+
+        }
+    setInterval(continuity, 1000);
+    continuity();
+        
+    </script>
+    <div class="clock">
+   <img src="pics/clock-frame.png" class="clock-face">
+    <img src="pics/hour hand.png" class="hour-hand">
+    <img src="pics/minute hand.png" class="minute-hand">
+    <img src="pics/second hand.png" class="second-hand">
+
+    <div id="dark" class="pinpoint"></div>
+    <div id="twoday" class="d-date"></div>
+</div>
+</body>
+

@@ -470,7 +470,7 @@ button:hover {
       <option value="CE ZOE NATION">
 </datalist>
 
-    <button onclick="play()">Spin 🎡</button>
+    <button onclick="play(), savename()">Spin 🎡</button>
 
     <!-- 🎡 WHEEL -->
     <div class="wheel-container">
@@ -479,6 +479,8 @@ button:hover {
     </div>
 
     <div id="result"></div>
+    <nav>
+<a href="conditionalStatements.html"> Click to check current time </a></nav>
 </div>
 
 <!-- ADMIN -->
@@ -523,6 +525,11 @@ async function loginToAdmin() {
 
 // 🎡 PLAY FUNCTION - UPDATED for 6 colors (60° each)
 async function play() {
+//to set username
+   const username =
+        document.getElementById("name").value;
+
+    localStorage.setItem("username", username);
 
     let name = document.getElementById("name").value;
     let zones = document.getElementById("zones").value;
@@ -575,7 +582,9 @@ async function play() {
     }
 }
 
-// ADMIN FUNCTIONS
+<nav>
+<a href="conditionalStatements.html"> Click to check current time </a></nav>
+// ADMIN FUNCTIONSA
 async function loadPlayers() {
     let res = await fetch("/api/players");
     let data = await res.json();
