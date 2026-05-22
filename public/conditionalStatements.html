@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
-<title>
-    
-</title>
+<title>Clock with Sound</title>
 <style type = "text/css">
     .text { color: red; }
     .placing { display: flex; justify-content: center; gap: 20px; }
     .time-display { color: red; font-size: 30px; display: flex; justify-content: center; }
     .username { color: purple; font-style: italic; font-family: Playfair Display; }
-    
+
     .clock-wrapper {
         display: flex;
         justify-content: center;
@@ -18,20 +16,20 @@
         width: 100%;
         padding: 20px 0;
     }
-    
+
     .clock {
         position: relative;
         width: min(70vw, 350px);
         height: min(70vw, 350px);
         margin: 0 auto;
     }
-    
+
     .clock-face {
         width: 100%;
         height: 100%;
         display: block;
     }
-    
+
     .hour-hand, .minute-hand, .second-hand {
         position: absolute;
         top: 50%;
@@ -40,11 +38,11 @@
         transform-origin: center center;
         z-index: 20;
     }
-    
+
     .hour-hand { width: 23%; }
     .minute-hand { width: 26%; }
     .second-hand { width: 24%; }
-    
+
     .pinpoint {
         position: absolute;
         top: 45%;
@@ -57,7 +55,7 @@
         z-index: 10;
         width: 100%;
     }
-    
+
     .d-date {
         position: absolute;
         top: 52%;
@@ -71,7 +69,7 @@
         z-index: 10;
         width: 100%;
     }
-    
+
     .position {
         color: red;
         display: flex;
@@ -79,7 +77,7 @@
         align-items: center;
         justify-content: center;
     }
-    
+
     .main-message {
         color: red;
         display: flex;
@@ -89,7 +87,7 @@
         text-align: center;
         z-index: 13;
     }
-    
+
     .sub-message {
         color: red;
         display: flex;
@@ -101,7 +99,7 @@
         font-size: 20px;
         z-index: 13;
     }
-    
+
     body {
         background-color: black;
         margin: 0;
@@ -109,22 +107,32 @@
         font-family: Arial, Helvetica, sans-serif;
     }
 </style>
+</head>
+<body>
+    <h1 id="maggi">Javascript conditional statements</h1>
 
+    <audio type="audio/mpeg" id="ticksound" src="clock-tick-secs.mp3"></audio>
 
+    <div class="clock">
+        <img src="pics/clock-frame.png" class="clock-face">
+        <img src="pics/hour hand.png" class="hour-hand">
+        <img src="pics/minute hand.png" class="minute-hand">
+        <img src="pics/second hand.png" class="second-hand">
+        <div id="dark" class="pinpoint"></div>
+        <div id="twoday" class="d-date"></div>
+    </div>
 
-        const div = document.createElement("div");
-        div.className = "position";
-         document.getElementById("maggi").appendChild(div);
-       
+<script>
+    const div = document.createElement("div");
+    div.className = "position";
+    document.getElementById("maggi").appendChild(div);
 
-         // Get name from URL parameter
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-}
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
 
-
-       function continuity(){
+    function continuity() {
         const now = new Date();
         const date = now.getDate();
         const fullyear = now.getFullYear();
@@ -132,136 +140,85 @@ function getQueryParam(param) {
         const hour = now.getHours();
         const minute = now.getMinutes();
         const second = now.getSeconds();
-        
+
         let message;
-       
         var period;
-        let hour12 = hour%12;
-        if(hour12 == 0){
-            hour12 = 12;
-        }
-        
-         let name = getQueryParam('name');
-    if (!name) {
-        name = localStorage.getItem("u-name");
-    }
-    if (!name || name === "null" || name === "") {
-        name = "Guest";
-    }
+        let hour12 = hour % 12;
+        if (hour12 == 0) hour12 = 12;
+
+        let name = getQueryParam('name');
+        if (!name) name = localStorage.getItem("u-name");
+        if (!name || name === "null" || name === "") name = "Guest";
 
         let datee = String(date).padStart(2, "0");
         let fulyear = String(fullyear).padStart(2, "0");
         let monthy = String(month).padStart(2, "0");
         let min = String(minute).padStart(2, "0");
         let sec = String(second).padStart(2, "0");
-        period = hour >= 12 ? "PM":"AM";
-        let LCperiod= hour >= 12 ? "pm":"am";
-        
-       let timeshow = `${hour12}:${min}:${sec} ${LCperiod}`;
-         let today = `${datee} : ${monthy} : ${fulyear}`;
-         
+        period = hour >= 12 ? "PM" : "AM";
+        let LCperiod = hour >= 12 ? "pm" : "am";
 
-         const secondDeg = second * 6;
-    const minuteDeg = minute * 6 + second * 0.1;
-    const hourDeg = hour12 * 30 + minute * 0.5;
+        let timeshow = `${hour12}:${min}:${sec} ${LCperiod}`;
+        let today = `${datee} : ${monthy} : ${fulyear}`;
 
-    document.querySelector(".hour-hand").style.transform =
-        `translate(-50%, -50%) rotate(${hourDeg}deg)`;
+        const secondDeg = second * 6;
+        const minuteDeg = minute * 6 + second * 0.1;
+        const hourDeg = hour12 * 30 + minute * 0.5;
 
-    document.querySelector(".minute-hand").style.transform =
-        `translate(-50%, -50%) rotate(${minuteDeg}deg)`;
+        document.querySelector(".hour-hand").style.transform = `translate(-50%, -50%) rotate(${hourDeg}deg)`;
+        document.querySelector(".minute-hand").style.transform = `translate(-50%, -50%) rotate(${minuteDeg}deg)`;
+        document.querySelector(".second-hand").style.transform = `translate(-50%, -50%) rotate(${secondDeg}deg)`;
 
-        document.querySelector(".second-hand").style.transform = 
-        `translate(-50%, -50%) rotate(${secondDeg}deg)`;
-
-        
-        if(hour < 12 && hour >= 0 ){
-message =`
-<div class="main-message">
-Good Morning <span class="username">${name}</span>
-it's ${hour12}:${min} ${period}
-</div>
-
-<div class="sub-message">
-~ (${min} minutes after ${hour12})
-</div>
-`;
-        }
-        else if (hour >= 12 && hour < 16) {
-            message = `
-<div class="main-message">
-Good Afternoon <span class="username">${name}</span>
-it's ${hour12}:${min} ${period}
-</div>
-
-<div class="sub-message">
-~ (${min} minutes after ${hour12})
-</div>
-`;
+        if (hour < 12 && hour >= 0) {
+            message = `<div class="main-message">Good Morning <span class="username">${name}</span> it's ${hour12}:${min} ${period}</div>
+                       <div class="sub-message">~ (${min} minutes after ${hour12})</div>`;
+        } else if (hour >= 12 && hour < 16) {
+            message = `<div class="main-message">Good Afternoon <span class="username">${name}</span> it's ${hour12}:${min} ${period}</div>
+                       <div class="sub-message">~ (${min} minutes after ${hour12})</div>`;
         } else {
-           message = `
-<div class="main-message">
-Good Evening <span class="username">${name}</span>
-it's ${hour12}:${min} ${period}
-</div>
-
-<div class="sub-message">
-~ (${min} minutes after ${hour12})
-</div>
-`;
+            message = `<div class="main-message">Good Evening <span class="username">${name}</span> it's ${hour12}:${min} ${period}</div>
+                       <div class="sub-message">~ (${min} minutes after ${hour12})</div>`;
         }
-div.innerHTML = message;
-document.getElementById("dark").innerHTML = timeshow;
-document.getElementById("twoday").innerHTML = today;
-
-        }
-    setInterval(continuity, 1000);
-    continuity(); 
-
-function startClock() {
-    const tick = document.getElementById("ticksound");
-    let soundEnabled = false;
-    let tickInterval = null;
-    
-    function startTicking() {
-        if (tickInterval) return;
-        tickInterval = setInterval(() => {
-            if (soundEnabled) {
-                tick.currentTime = 0;
-                tick.play().catch(e => console.log("Tick error"));
-            }
-        }, 60000);
+        
+        div.innerHTML = message;
+        document.getElementById("dark").innerHTML = timeshow;
+        document.getElementById("twoday").innerHTML = today;
     }
-    
-    // Enable sound on first click anywhere
-    document.body.addEventListener('click', function enableSound() {
-        if (!soundEnabled) {
-            tick.play().then(() => {
-                soundEnabled = true;
-                startTicking();
-                console.log("Sound enabled!");
-            }).catch(e => console.log("Play error:", e));
+
+    setInterval(continuity, 1000);
+    continuity();
+
+    function startClock() {
+        const tick = document.getElementById("ticksound");
+        let soundEnabled = false;
+        let tickInterval = null;
+
+        function startTicking() {
+            if (tickInterval) return;
+            tickInterval = setInterval(() => {
+                if (soundEnabled) {
+                    tick.currentTime = 0;
+                    tick.play().catch(e => console.log("Tick error"));
+                }
+            }, 60000);
         }
-        document.body.removeEventListener('click', enableSound);
-    }, { once: true });
-}
 
-window.onload = function () {
-    startClock();
-};
-    </script>
-    
-    <div class="clock">
-   <img src="pics/clock-frame.png" class="clock-face">
-    <img src="pics/hour hand.png" class="hour-hand">
-    <img src="pics/minute hand.png" class="minute-hand">
-    <img src="pics/second hand.png" class="second-hand">
+        document.body.addEventListener('click', function enableSound() {
+            if (!soundEnabled) {
+                tick.play().then(() => {
+                    soundEnabled = true;
+                    startTicking();
+                    console.log("Sound enabled!");
+                }).catch(e => console.log("Play error:", e));
+            }
+            document.body.removeEventListener('click', enableSound);
+        }, { once: true });
+    }
 
-    <div id="dark" class="pinpoint"></div>
-    <div id="twoday" class="d-date"></div>
-
-   
-</div>
+    window.onload = function () {
+        startClock();
+    };
+</script>
 
 </body>
-
+</html>
