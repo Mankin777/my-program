@@ -203,16 +203,15 @@
             }, 60000);
         }
 
-        document.body.addEventListener('click', function enableSound() {
-            if (!soundEnabled) {
-                tick.play().then(() => {
-                    soundEnabled = true;
-                    startTicking();
-                    console.log("Sound enabled!");
-                }).catch(e => console.log("Play error:", e));
-            }
-            document.body.removeEventListener('click', enableSound);
-        }, { once: true });
+        // Show alert - user must click OK to enable sound
+        alert("🔊 Click OK to enable clock ticking sound");
+
+        // After user clicks OK, enable sound
+        tick.play().then(() => {
+            soundEnabled = true;
+            startTicking();
+            console.log("Sound enabled!");
+        }).catch(e => console.log("Play error:", e));
     }
 
     window.onload = function () {
