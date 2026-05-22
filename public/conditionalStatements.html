@@ -6,131 +6,109 @@
     
 </title>
 <style type = "text/css">
-    .text{
-        color : red;
-    }
-    .placing{
+    .text { color: red; }
+    .placing { display: flex; justify-content: center; gap: 20px; }
+    .time-display { color: red; font-size: 30px; display: flex; justify-content: center; }
+    .username { color: purple; font-style: italic; font-family: Playfair Display; }
+    
+    .clock-wrapper {
         display: flex;
         justify-content: center;
-        gap:20px;
+        align-items: center;
+        width: 100%;
+        padding: 20px 0;
     }
-
-    .time-display{
-    color:red;
-    font-size:30px;
-     display: flex;
+    
+    .clock {
+        position: relative;
+        width: min(70vw, 350px);
+        height: min(70vw, 350px);
+        margin: 0 auto;
+    }
+    
+    .clock-face {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    
+    .hour-hand, .minute-hand, .second-hand {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transform-origin: center center;
+        z-index: 20;
+    }
+    
+    .hour-hand { width: 23%; }
+    .minute-hand { width: 26%; }
+    .second-hand { width: 24%; }
+    
+    .pinpoint {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: calc(min(70vw, 350px) * 0.045);
+        color: blue;
+        text-align: center;
+        white-space: nowrap;
+        z-index: 10;
+        width: 100%;
+    }
+    
+    .d-date {
+        position: absolute;
+        top: 52%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: calc(min(70vw, 350px) * 0.022);
+        color: aqua;
+        text-align: center;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: nowrap;
+        z-index: 10;
+        width: 100%;
+    }
+    
+    .position {
+        color: red;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-}
-.username{
-    color: purple;
-    font-style: italic;
-    font-family: Playfair Display;
-}
-.clock-wrapper{
- display: flex;
- justify-content: center;
- align-items: center;
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-}
-.clock {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    justify-content: center;
-}
-.pinpoint{
-    position: absolute;
-    top: 22.5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 25px;
-    color: blue;
-    text-align: center;
-
-    z-index: 10; /* 🔥 THIS FIXES IT */
-}
-.d-date{
-    color:aqua;
-    position:absolute;
-    top:25.9%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    font-size:12.5px;
-    text-align:center;
-    font-family:'Courier New', Courier, monospace;
-    z-index:10;
-}
-.position{
-    color:red;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-}
-.main-message{
-        color : red;
-    display:flex;
-justify-content:center;
-gap:20px;
-flex-wrap:wrap;
-    text-align:center;
-    z-index: 13;
-}
-
-.sub-message{
-        color : red;
-    display:flex;
-justify-content:center;
-gap:20px;
-flex-wrap:wrap;
-    text-align:center;
-    margin-top:10px;
-    font-size:20px;
-    z-index: 13;
-}
-.clock-face{
-    width: 30%;
-    display: block;
-    height:30%;
-}
-
-.hour-hand,
-.minute-hand,.second-hand{
-    position: absolute;
- top: 14.4%;
-    left: 50%;
-    transform-origin: center center;
-    transform: translate(-50%, -50%);
-    z-index: 20;
-}
-.hour-hand {
-    width: 23%;
-}
-
-.minute-hand {
-    width: 26%;
-}
-.second-hand{
-    width: 24%;
-}
- body{
-background-color:black;
-font-family:Arial, Helvetica, sans-serif;
-margin:0;
-padding:0;
-    font-family: Arial, Helvetica, sans-serif;
-       }
+    }
+    
+    .main-message {
+        color: red;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        text-align: center;
+        z-index: 13;
+    }
+    
+    .sub-message {
+        color: red;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 20px;
+        z-index: 13;
+    }
+    
+    body {
+        background-color: black;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 </style>
-</head>
-<body>
-    <h1 id="maggi" >Javascript conditional statements</h1>
-
- <audio type="audio/mpeg" id="ticksound" src="clock-tick-secs.mp3"></audio>
-<script  >
 
 
 
@@ -240,36 +218,34 @@ document.getElementById("twoday").innerHTML = today;
     setInterval(continuity, 1000);
     continuity(); 
 
-function startClock(){
+function startClock() {
     const tick = document.getElementById("ticksound");
-    let audioStarted = false;
+    let soundEnabled = false;
+    let tickInterval = null;
     
-    function playTick() {
-        if (audioStarted) {
-            tick.currentTime = 0;
-            tick.play().catch(e => console.log("Tick error:", e));
+    function startTicking() {
+        if (tickInterval) return;
+        tickInterval = setInterval(() => {
+            if (soundEnabled) {
+                tick.currentTime = 0;
+                tick.play().catch(e => console.log("Tick error"));
+            }
+        }, 60000);
+    }
+    
+    // Enable sound on first click anywhere
+    document.body.addEventListener('click', function enableSound() {
+        if (!soundEnabled) {
+            tick.play().then(() => {
+                soundEnabled = true;
+                startTicking();
+                console.log("Sound enabled!");
+            }).catch(e => console.log("Play error:", e));
         }
-    }
-    
-    function enableAudio() {
-        if (audioStarted) return;
-        audioStarted = true;
-        tick.play().then(() => {
-            console.log("Audio enabled!");
-        }).catch(e => console.log("Audio error:", e));
-        
-        // Remove the event listener after first click
-        document.body.removeEventListener('click', enableAudio);
-    }
-    
-    // Wait for user click to enable audio (browser policy)
-    document.body.addEventListener('click', enableAudio);
-    
-    // Start the ticking interval
-    setInterval(playTick, 60000);
+        document.body.removeEventListener('click', enableSound);
+    }, { once: true });
 }
 
-// makes the startclock() function start immediately 
 window.onload = function () {
     startClock();
 };
