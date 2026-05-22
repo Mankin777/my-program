@@ -6,6 +6,37 @@
 
 <style>
 /*Created by King 😁*/
+/*menu bar icon */
+.menu-links{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    padding-left:30px;
+}
+.menu-links button{
+    width:130px;
+    height:40px;
+    margin-left: 50px;
+}
+.menu-icon{
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: rgb(0, 0, 31);
+    transition: 0.4s;
+}
+
 
 body {
     font-family: Arial;
@@ -91,6 +122,24 @@ button:hover {
 </head>
 
 <body>
+
+  <!--menu bar, dropdown selection-->
+
+<div class="menu-icon" onclick="openMenu()">☰</div> 
+<div class="menu-icon" style ="margin-left: 30px;" onclick="closeMenu()">↩️</div>
+<div id="sidebar" class="sidebar">
+<br>
+  <br>
+   <br>
+  <br>
+
+  <nav class="menu-links">
+    <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
+     <a href="con form.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
+     <a href="first.html" ><button style =" color: white; margin-left: 30px;"><b>Others</b></button></a><br>
+     <a href="first.html"  ><button style ="color: white; margin-left: 30px;"><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
+     </nav>
+</div>
 
 <header class="ministry-header">
   <div class="ministry-title">
@@ -502,6 +551,13 @@ button:hover {
 </div>
 
 <script>
+//open menu function
+function openMenu(){
+  document.getElementById("sidebar").style.left = "0";
+}
+function closeMenu(){
+  document.getElementById("sidebar").style.left = "-250px";
+}
 // Track if user has successfully spun
 let hasSpunSuccessfully = false;
 

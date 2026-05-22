@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Contact us form</title>
+    <style>
+        .body{
+color : white;
+font-weight: normal;
+            }
+      body{
+        font-family: Arial, Helvetica, sans-serif;}*
+       {box-sizing: border-box;} 
+      input[type=text], input[type=number],select, textarea{
+        background-color: #f5efef;
+        padding: 12px;
+        width:100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize:vertical;
+      }
+      .container{
+        background-color: #f2f2f2;
+        padding:20px;
+        border-radius: 5px;
+      }
+     input[type=submit]:hover{
+        background-color: #45a049;
+    }
+    .menu-links{
+    display:flex;
+    flex-direction:column;
+    gap: 5px;
+    padding-left:30px;
+    margin-left: 50px;
+}
+.menu-links button{
+    width:130px;
+    height:40px;
+}
+    .menu-icon{
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+    color: grey;
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: rgb(235, 233, 233);
+    transition: 0.4s;
+}
+
+button {
+    padding: 12px 20px;
+    background: orange;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+    </style>
+</head>
+<body>
+  
+    <!--menu bar, dropdown selection-->
+
+<div class="menu-icon" onclick="openMenu()">☰</div>
+<div class="menu-icon" style ="margin-left: 30px;" onclick="closeMenu()">↩️</div>
+<div id="sidebar" class="sidebar">
+  
+<br>
+  <br>
+
+<br>
+  <br>
+  <br>
+
+    <nav class="menu-links">
+    <a href="index.html" ><button style =" color: white; "><b>Home 🏠</b></button></a><br>
+     <a href="con form.html" ><button style =" color: white; "><b>📞ontact_us</b></button></a><br>
+     <a href="first.html" ><button style =" color: white; "><b>Others</b></button></a><br>
+     <a href="first.html"  ><button style ="color: white; "><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
+     </nav>
+
+</div>
+
+    <div class="container">
+      
+
+<h4><br>Contact us form design</h4>
+<form>
+<label for="name">Name:</label><br><br>
+<input type="text" name="first_name" id="name" placeholder="Enter your name..."><br><br>
+<label for="number">Contact Number:</label><br><br>
+<input type="number" id="number" name="contact_number" placeholder="Enter your contact number..."><br><br>
+<label for="country">Select your country:</label><br><br>
+<input list="countries" id="country" name="users_country" placeholder="select or search your country">
+<datalist id="countries" >
+<option value="Nigeria">~Nigeria</option>
+<option value="Canada">~Canada</option>
+<option value="U.S.A">~United States of America</option>
+<option value="France">`France</option>
+<option value="K.S.A">~Kingdom of Saudi-Arabia</option>
+<option value="England">~England</option>
+</datalist><br><br>
+<label for="subject">Subject:</label><br><br>
+<textarea name="Subject" placeholder="type your response here..." id="subject" style="height:200px;"></textarea><br><br>
+<input type="submit" value="submit" style="background-color: blue; cursor:pointer; border: none;  color: white; height: 20px; width: 70px; border-radius: 5px;">
+<script >
+//open menu function
+function openMenu(){
+  document.getElementById("sidebar").style.left = "0";
+}
+function closeMenu(){
+  document.getElementById("sidebar").style.left = "-250px";
+}
+</script>
+</form>
+    </div>
+</body>

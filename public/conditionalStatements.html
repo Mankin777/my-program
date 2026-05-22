@@ -1,152 +1,201 @@
 <!DOCTYPE html>
 <html>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <head>
-<title>
-    
-</title>
+<title>Clock with Sound</title>
 <style type = "text/css">
-    .text{
-        color : red;
-    }
-    .placing{
+    .text { color: red; }
+    .placing { display: flex; justify-content: center; gap: 20px; }
+    .time-display { color: red; font-size: 30px; display: flex; justify-content: center; }
+    .username { color: purple; font-style: italic; font-family: Playfair Display; }
+
+    .clock-wrapper {
         display: flex;
         justify-content: center;
-        gap:20px;
+        align-items: center;
+        width: 100%;
+        padding: 20px 0;
     }
 
-    .time-display{
-    color:red;
-    font-size:30px;
-     display: flex;
-        justify-content: center;
-}
-.username{
-    color: purple;
-    font-style: italic;
-    font-family: Playfair Display;
-}
-.clock-wrapper{
- display: flex;
- justify-content: center;
- align-items: center;
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    margin: auto;
-}
-.clock {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    justify-content: center;
-}
-.pinpoint{
-    position: absolute;
-    top: 22.5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 25px;
-    color: blue;
-    text-align: center;
+    .clock {
+        position: relative;
+        width: min(70vw, 350px);
+        height: min(70vw, 350px);
+        margin: 0 auto;
+    }
 
-    z-index: 10; /* 🔥 THIS FIXES IT */
-}
-.d-date{
-    color:aqua;
-    position:absolute;
-    top:25.9%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    font-size:12.5px;
-    text-align:center;
-    font-family:'Courier New', Courier, monospace;
-    z-index:10;
-}
-.position{
-    color:red;
+    .clock-face {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+
+    .hour-hand, .minute-hand, .second-hand {
+        position: absolute;
+        top: 48%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transform-origin: center center;
+        z-index: 20;
+    }
+
+    .hour-hand { width: 87%; }
+    .minute-hand { width: 87%; }
+    .second-hand { width: 87%; }
+
+    .pinpoint {
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: calc(min(70vw, 350px) * 0.063);
+        color: blue;
+        text-align: center;
+        white-space: nowrap;
+        z-index: 10;
+        width: 100%;
+    }
+
+    .d-date {
+        position: absolute;
+        top: 87%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: calc(min(70vw, 350px) * 0.022);
+        color: aqua;
+        text-align: center;
+        font-family: 'Courier New', Courier, monospace;
+        white-space: nowrap;
+        z-index: 10;
+        width: 100%;
+    }
+
+    .position {
+        color: red;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .main-message {
+        color: red;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        text-align: center;
+        z-index: 13;
+    }
+
+    .sub-message {
+        color: red;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 20px;
+        z-index: 13;
+    }
+
+    body {
+        background-color: black;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .menu-links{
     display:flex;
     flex-direction:column;
-    align-items:center;
-    justify-content:center;
+    gap: 5px;
+    padding-left:30px;
+    margin-left: 50px;
 }
-.main-message{
-        color : red;
-    display:flex;
-justify-content:center;
-gap:20px;
-flex-wrap:wrap;
-    text-align:center;
-    z-index: 13;
+.menu-links button{
+    width:130px;
+    height:40px;
 }
-
-.sub-message{
-        color : red;
-    display:flex;
-justify-content:center;
-gap:20px;
-flex-wrap:wrap;
-    text-align:center;
-    margin-top:10px;
-    font-size:20px;
-    z-index: 13;
-}
-.clock-face{
-    width: 30%;
-    display: block;
-    height:30%;
+    .menu-icon{
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+    color: grey;
 }
 
-.hour-hand,
-.minute-hand,.second-hand{
-    position: absolute;
- top: 14.4%;
-    left: 50%;
-    transform-origin: center center;
-    transform: translate(-50%, -50%);
-    z-index: 20;
-}
-.hour-hand {
-    width: 23%;
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: rgb(235, 233, 233);
+    transition: 0.4s;
 }
 
-.minute-hand {
-    width: 26%;
+button {
+    padding: 12px 20px;
+    background: orange;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
-.second-hand{
-    width: 24%;
-}
- body{
-background-color:black;
-font-family:Arial, Helvetica, sans-serif;
-margin:0;
-padding:0;
-    font-family: Arial, Helvetica, sans-serif;
-       }
 </style>
 </head>
 <body>
-    <h1 id="maggi" >Javascript conditional statements</h1>
+      <!--menu bar, dropdown selection-->
 
- <audio type="audio/mpeg" id="ticksound" src="clock-tick-secs.mp3"></audio>
-<script  >
+<div class="menu-icon" onclick="openMenu()">☰</div> 
+<div class="menu-icon" style ="margin-left: 30px;" onclick="closeMenu()">↩️</div>
+<div id="sidebar" class="sidebar">
+<br>
+  <br>
+  <br>
+  <br>
 
+  <nav class="menu-links">
+    <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
+     <a href="con form.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
+     <a href="first.html" ><button style =" color: white; margin-left: 30px;"><b>Others</b></button></a><br>
+     <a href="first.html"  ><button style ="color: white; margin-left: 30px;"><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
+     </nav>
+</div>
 
+    <h1 id="maggi">Javascript conditional statements</h1>
 
-        const div = document.createElement("div");
-        div.className = "position";
-         document.getElementById("maggi").appendChild(div);
-       
+    <audio type="audio/mpeg" id="ticksound" src="clock-tick-secs.mp3"></audio>
 
-         // Get name from URL parameter
-function getQueryParam(param) {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
+    <div class="clock">
+        <img src="pics/clock-frame.png" class="clock-face">
+        <img src="pics/hour hand.png" class="hour-hand">
+        <img src="pics/minute hand.png" class="minute-hand">
+        <img src="pics/second hand.png" class="second-hand">
+        <div id="dark" class="pinpoint"></div>
+        <div id="twoday" class="d-date"></div>
+    </div>
+
+<script>
+    //open menu function
+function openMenu(){
+  document.getElementById("sidebar").style.left = "0";
 }
+function closeMenu(){
+  document.getElementById("sidebar").style.left = "-250px";
+}
+    const div = document.createElement("div");
+    div.className = "position";
+    document.getElementById("maggi").appendChild(div);
 
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
 
-       function continuity(){
+    function continuity() {
         const now = new Date();
         const date = now.getDate();
         const fullyear = now.getFullYear();
@@ -154,138 +203,84 @@ function getQueryParam(param) {
         const hour = now.getHours();
         const minute = now.getMinutes();
         const second = now.getSeconds();
-        
+
         let message;
-       
         var period;
-        let hour12 = hour%12;
-        if(hour12 == 0){
-            hour12 = 12;
-        }
-        
-         let name = getQueryParam('name');
-    if (!name) {
-        name = localStorage.getItem("u-name");
-    }
-    if (!name || name === "null" || name === "") {
-        name = "Guest";
-    }
+        let hour12 = hour % 12;
+        if (hour12 == 0) hour12 = 12;
+
+        let name = getQueryParam('name');
+        if (!name) name = localStorage.getItem("u-name");
+        if (!name || name === "null" || name === "") name = "Guest";
 
         let datee = String(date).padStart(2, "0");
         let fulyear = String(fullyear).padStart(2, "0");
         let monthy = String(month).padStart(2, "0");
         let min = String(minute).padStart(2, "0");
         let sec = String(second).padStart(2, "0");
-        period = hour >= 12 ? "PM":"AM";
-        let LCperiod= hour >= 12 ? "pm":"am";
-        
-       let timeshow = `${hour12}:${min}:${sec} ${LCperiod}`;
-         let today = `${datee} : ${monthy} : ${fulyear}`;
-         
+        period = hour >= 12 ? "PM" : "AM";
+        let LCperiod = hour >= 12 ? "pm" : "am";
 
-         const secondDeg = second * 6;
-    const minuteDeg = minute * 6 + second * 0.1;
-    const hourDeg = hour12 * 30 + minute * 0.5;
+        let timeshow = `${hour12}:${min}:${sec} ${LCperiod}`;
+        let today = `${datee} : ${monthy} : ${fulyear}`;
 
-    document.querySelector(".hour-hand").style.transform =
-        `translate(-50%, -50%) rotate(${hourDeg}deg)`;
+        const secondDeg = second * 6;
+        const minuteDeg = minute * 6 + second * 0.1;
+        const hourDeg = hour12 * 30 + minute * 0.5;
 
-    document.querySelector(".minute-hand").style.transform =
-        `translate(-50%, -50%) rotate(${minuteDeg}deg)`;
+        document.querySelector(".hour-hand").style.transform = `translate(-50%, -50%) rotate(${hourDeg}deg)`;
+        document.querySelector(".minute-hand").style.transform = `translate(-50%, -50%) rotate(${minuteDeg}deg)`;
+        document.querySelector(".second-hand").style.transform = `translate(-50%, -50%) rotate(${secondDeg}deg)`;
 
-        document.querySelector(".second-hand").style.transform = 
-        `translate(-50%, -50%) rotate(${secondDeg}deg)`;
-
-        
-        if(hour < 12 && hour >= 0 ){
-message =`
-<div class="main-message">
-Good Morning <span class="username">${name}</span>
-it's ${hour12}:${min} ${period}
-</div>
-
-<div class="sub-message">
-~ (${min} minutes after ${hour12})
-</div>
-`;
-        }
-        else if (hour >= 12 && hour < 16) {
-            message = `
-<div class="main-message">
-Good Afternoon <span class="username">${name}</span>
-it's ${hour12}:${min} ${period}
-</div>
-
-<div class="sub-message">
-~ (${min} minutes after ${hour12})
-</div>
-`;
+        if (hour < 12 && hour >= 0) {
+            message = `<div class="main-message">Good Morning <span class="username">${name}</span> it's ${hour12}:${min} ${period}</div>
+                       <div class="sub-message">~ (${min} minutes after ${hour12})</div>`;
+        } else if (hour >= 12 && hour < 16) {
+            message = `<div class="main-message">Good Afternoon <span class="username">${name}</span> it's ${hour12}:${min} ${period}</div>
+                       <div class="sub-message">~ (${min} minutes after ${hour12})</div>`;
         } else {
-           message = `
-<div class="main-message">
-Good Evening <span class="username">${name}</span>
-it's ${hour12}:${min} ${period}
-</div>
-
-<div class="sub-message">
-~ (${min} minutes after ${hour12})
-</div>
-`;
+            message = `<div class="main-message">Good Evening <span class="username">${name}</span> it's ${hour12}:${min} ${period}</div>
+                       <div class="sub-message">~ (${min} minutes after ${hour12})</div>`;
         }
-div.innerHTML = message;
-document.getElementById("dark").innerHTML = timeshow;
-document.getElementById("twoday").innerHTML = today;
-
-        }
-    setInterval(continuity, 1000);
-    continuity(); 
-
-function startClock(){
-    const tick = document.getElementById("ticksound");
-    let audioStarted = false;
-    
-    function playTick() {
-        if (audioStarted) {
-            tick.currentTime = 0;
-            tick.play().catch(e => console.log("Tick error:", e));
-        }
-    }
-    
-    function enableAudio() {
-        if (audioStarted) return;
-        audioStarted = true;
-        tick.play().then(() => {
-            console.log("Audio enabled!");
-        }).catch(e => console.log("Audio error:", e));
         
-        // Remove the event listener after first click
-        document.body.removeEventListener('click', enableAudio);
+        div.innerHTML = message;
+        document.getElementById("dark").innerHTML = timeshow;
+        document.getElementById("twoday").innerHTML = today;
     }
-    
-    // Wait for user click to enable audio (browser policy)
-    document.body.addEventListener('click', enableAudio);
-    
-    // Start the ticking interval
-    setInterval(playTick, 60000);
-}
 
-// makes the startclock() function start immediately 
-window.onload = function () {
-    startClock();
-};
-    </script>
-    
-    <div class="clock">
-   <img src="pics/clock-frame.png" class="clock-face">
-    <img src="pics/hour hand.png" class="hour-hand">
-    <img src="pics/minute hand.png" class="minute-hand">
-    <img src="pics/second hand.png" class="second-hand">
+    setInterval(continuity, 1000);
+    continuity();
 
-    <div id="dark" class="pinpoint"></div>
-    <div id="twoday" class="d-date"></div>
+    function startClock() {
+        const tick = document.getElementById("ticksound");
+        let soundEnabled = false;
+        let tickInterval = null;
 
-   
-</div>
+        function startTicking() {
+            if (tickInterval) return;
+            tickInterval = setInterval(() => {
+                if (soundEnabled) {
+                    tick.currentTime = 0;
+                    tick.play().catch(e => console.log("Tick error"));
+                }
+            }, 60000);
+        }
+
+        // Show alert - user must click OK to enable sound
+        alert("🔊 Click OK to enable clock ticking sound");
+
+        // After user clicks OK, enable sound
+        tick.play().then(() => {
+            soundEnabled = true;
+            startTicking();
+            console.log("Sound enabled!");
+        }).catch(e => console.log("Play error:", e));
+    }
+
+    window.onload = function () {
+        startClock();
+    };
+</script>
 
 </body>
-
+</html>
