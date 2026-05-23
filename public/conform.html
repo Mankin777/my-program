@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Contact us form</title>
@@ -61,10 +62,18 @@ font-weight: normal;
 
 button {
     padding: 12px 20px;
-    background: orange;
+    background: rgb(235, 233, 233);
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    color: rgb(51, 49, 49);
+}
+button:hover {
+    background: darkorange;
+}
+/*on selecting that particular active button related to <a>*/
+.menu-links a.active button {
+    border: 2px solid darkorange;
 }
     </style>
 </head>
@@ -83,11 +92,11 @@ button {
   <br>
   <br>
 
-    <nav class="menu-links">
-    <a href="index.html" ><button style =" color: white; "><b>Home 🏠</b></button></a><br>
-     <a href="con form.html" ><button style =" color: white; "><b>📞ontact_us</b></button></a><br>
-     <a href="first.html" ><button style =" color: white; "><b>Others</b></button></a><br>
-     <a href="first.html"  ><button style ="color: white; "><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
+    <nav class="menu-links" >
+    <a href="index.html" ><button style =" margin-left: 30px;"><b>Home 🏠</b></button></a><br>
+     <a href="conform.html" ><button style ="margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
+     <a href="first.html" ><button style =" margin-left: 30px;"><b>Givings 🤝</b></button></a><br>
+     <a href="first.html"  ><button style ="margin-left: 30px;"><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
      </nav>
 
 </div>
@@ -114,6 +123,7 @@ button {
 <label for="subject">Subject:</label><br><br>
 <textarea name="Subject" placeholder="type your response here..." id="subject" style="height:200px;"></textarea><br><br>
 <input type="submit" value="submit" style="background-color: blue; cursor:pointer; border: none;  color: white; height: 20px; width: 70px; border-radius: 5px;">
+</form>
 <script >
 //open menu function
 function openMenu(){
@@ -122,7 +132,19 @@ function openMenu(){
 function closeMenu(){
   document.getElementById("sidebar").style.left = "-250px";
 }
+
+// javascript url for the border line selection when on  particular page for each button
+document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll(".menu-links a");
+    const currentPage = window.location.pathname.split("/").pop();
+
+    links.forEach(link => {
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("active");
+        }
+    });
+});
 </script>
-</form>
     </div>
 </body>
+</html>

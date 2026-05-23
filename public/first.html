@@ -202,29 +202,48 @@ resize:vertical;
     left: -250px;
     width: 250px;
     height: 100%;
-    background: rgb(235, 233, 233);
+    background: #121212;
     transition: 0.4s;
 }
 
 button {
     padding: 12px 20px;
-    background: orange;
+    background: #121212;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+}
+button:hover {
+    background: darkorange;
+}
+/*on selecting that particular active button related to <a>*/
+.menu-links a.active button {
+    border: 2px solid darkorange;
 }
         </style>
         </head>
       
         <body>
             <script>
-                    //open menu function
+//open menu function
 function openMenu(){
   document.getElementById("sidebar").style.left = "0";
 }
 function closeMenu(){
   document.getElementById("sidebar").style.left = "-250px";
 }
+
+// javascript url for the border line selection when on  particular page for each button
+document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll(".menu-links a");
+    const currentPage = decodeURIComponent(window.location.pathname.split("/").pop());
+
+    links.forEach(link => {
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("active");
+        }
+    });
+});
             </script>
                <!--menu bar, dropdown selection-->
 
@@ -239,7 +258,7 @@ function closeMenu(){
     <nav class="menu-links">
     <a href="index.html" ><button style =" color: white; "><b>Home 🏠</b></button></a>
      <a href="con form.html" ><button style =" color: white; "><b>📞ontact_us</b></button></a>
-     <a href="first.html" ><button style =" color: white; "><b>Others</b></button></a>
+     <a href="first.html" ><button style =" color: white; "><b>Givings 🤝</b></button></a>
      <a href="first.html"  ><button style ="color: white; "><b>About US </b><span style="font-size: large;" >👥</span></button></a>
      </nav>
 

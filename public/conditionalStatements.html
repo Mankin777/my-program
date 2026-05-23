@@ -23,7 +23,6 @@
         height: min(70vw, 350px);
         margin: 0 auto;
     }
-
     .clock-face {
         width: 100%;
         height: 100%;
@@ -78,6 +77,7 @@
         justify-content: center;
     }
 
+
     .main-message {
         color: red;
         display: flex;
@@ -87,6 +87,9 @@
         text-align: center;
         z-index: 13;
     }
+    button:hover {
+    background: darkorange;
+}
 
     .sub-message {
         color: red;
@@ -144,6 +147,10 @@ button {
     border-radius: 8px;
     cursor: pointer;
 }
+/*on selecting that particular active button related to <a>*/
+.menu-links a.active button {
+    border: 2px solid darkorange;
+}
 </style>
 </head>
 <body>
@@ -160,7 +167,7 @@ button {
   <nav class="menu-links">
     <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
      <a href="con form.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
-     <a href="first.html" ><button style =" color: white; margin-left: 30px;"><b>Others</b></button></a><br>
+     <a href="first.html" ><button style =" color: white; margin-left: 30px;"><b>Givings 🤝</b></button></a><br>
      <a href="first.html"  ><button style ="color: white; margin-left: 30px;"><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
      </nav>
 </div>
@@ -194,6 +201,7 @@ function closeMenu(){
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
+
 
     function continuity() {
         const now = new Date();
@@ -280,6 +288,16 @@ function closeMenu(){
     window.onload = function () {
         startClock();
     };
+
+    // javascript url for the border line selection when on  particular page for each button
+const links = document.querySelectorAll(".menu-links a");
+const currentPage = window.location.pathname.split("/").pop();
+
+links.forEach(link => {
+    if (link.getAttribute("href") === currentPage) {
+        link.classList.add("active");
+    }
+});
 </script>
 
 </body>
