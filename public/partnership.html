@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+PARTNERSHIPS & GIVINGS 🤝
+        </title>
+      <style>
+        /* HEADER */
+.ministry-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 1.5rem;
+  border-bottom: 4px solid gold;
+  border-top: 4px solid gold;
+  margin-bottom: 2rem;
+}
+/*Created by King 😁*/
+/*menu bar icon */
+.menu-links{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    padding-left:30px;
+}
+.menu-links button{
+    width:130px;
+    height:40px;
+    margin-left: 50px;
+}
+.menu-icon{
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+    color: white;
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: rgb(0, 0, 31);
+    transition: 0.4s;
+}
+button {
+    padding: 12px 20px;
+    background: rgb(0, 0, 31);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+}
+
+button:hover {
+    background: darkorange;
+}
+/*on selecting that particular active button related to <a>*/
+.menu-links a.active button {
+    border: 2px solid darkorange;
+}
+.ministry-title h1 {
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, #fff, #ffd700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+      </style> 
+    </head>
+
+
+    <body>
+          <!--menu bar, dropdown selection-->
+
+<div class="menu-icon" onclick="openMenu()">☰</div> 
+<div class="menu-icon" style ="margin-left: 30px;" onclick="closeMenu()">↩️</div>
+<div id="sidebar" class="sidebar">
+<br>
+  <br>
+   <br>
+  <br>
+
+  <nav class="menu-links" >
+    <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
+     <a href="conform.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
+     <a href="partnership.html" ><button style =" color: white; margin-left: 30px;"><b>Givings 🤝</b></button></a><br>
+     <a href="first.html"  ><button style ="color: white; margin-left: 30px;"><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
+     </nav>
+</div>
+
+
+        <header class="ministry-header">
+  <div class="ministry-title">
+    <h1>✝️ PARTNERSHIPS & GIVINGS 🤝 ✝️</h1>
+    <p></p>
+  </div>
+</header>
+        <script>
+//open menu function
+function openMenu(){
+  document.getElementById("sidebar").style.left = "0";
+}
+function closeMenu(){
+  document.getElementById("sidebar").style.left = "-250px";
+}
+
+// javascript url for the border line selection when on  particular page for each button
+document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll(".menu-links a");
+    const currentPage = window.location.pathname.split("/").pop();
+
+    links.forEach(link => {
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("active");
+        }
+    });
+});
+        </script>
+    </body>
+    
+</html>
