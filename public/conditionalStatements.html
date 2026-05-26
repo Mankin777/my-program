@@ -151,9 +151,21 @@ button {
 .menu-links a.active button {
     border: 2px solid darkorange;
 }
+.countdown-display{
+    color: orange;
+    font-size: 22px;
+    text-align: center;
+    margin-top: 20px;
+    font-family: Arial;
+}
+.countdown-display{
+   color:orange;
+   font-size:25px;
+}
 </style>
 </head>
 <body>
+
       <!--menu bar, dropdown selection-->
 
 <div class="menu-icon" onclick="openMenu()">☰</div> 
@@ -168,7 +180,7 @@ button {
     <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
      <a href="con form.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
      <a href="partnership.html" ><button style =" color: white; margin-left: 30px;"><b>Givings 🤝</b></button></a><br>
-     <a href="first.html"  ><button style ="color: white; margin-left: 30px;"><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
+     <a href="aboutUs.html"  ><button style ="color: white; margin-left: 30px;"><b>About US </b><span style="font-size: large;" >👥</span></button></a><br>
      </nav>
 </div>
 
@@ -184,7 +196,8 @@ button {
         <div id="dark" class="pinpoint"></div>
         <div id="twoday" class="d-date"></div>
     </div>
-
+<div id="countdown" class="countdown-display"></div>
+<audio id="ticksound" src="crowd.mp3"></audio>
 <script>
     //open menu function
 function openMenu(){
@@ -205,12 +218,15 @@ function closeMenu(){
 
     function continuity() {
         const now = new Date();
+        
         const date = now.getDate();
         const fullyear = now.getFullYear();
         const month = now.getMonth() + 1;
         const hour = now.getHours();
         const minute = now.getMinutes();
         const second = now.getSeconds();
+// count down process equattion 
+timeLeft = targetDate - now;
 
         let message;
         var period;
@@ -298,6 +314,59 @@ links.forEach(link => {
         link.classList.add("active");
     }
 });
+
+// countdon process
+
+function updateCountdown() {
+    const targetDate = new Date("May 26, 2025 01:32:00").getTime();
+
+
+    const now = new Date().getTime();
+
+    const distance = targetDate - now;
+
+    if (distance <= 0) {
+        document.getElementById("countdown").innerHTML =
+            "🎉 Merry Christmas!";
+
+        clearInterval(countdownInterval);
+
+        celebration();
+
+        return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+    const hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) /
+        (1000 * 60 * 60)
+    );
+
+    const minutes = Math.floor(
+        (distance % (1000 * 60 * 60)) /
+        (1000 * 60)
+    );
+
+    const seconds = Math.floor(
+        (distance % (1000 * 60)) / 1000
+    );
+
+    document.getElementById("countdown").innerHTML =
+        `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+const countdownInterval = setInterval(updateCountdown, 1000);
+updateCountdown();
+
+function celebration(){
+    alert("The wait is over!");
+
+    //document.body.style.backgroundColor = "gold";
+    document.getElementById("ticksound").play();
+}
+
+
 </script>
 
 </body>
