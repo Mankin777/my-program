@@ -32,9 +32,15 @@ const colors = ["Red", "Purple", "White", "Pink", "Green", "Yellow"];
 const ADMIN_PASSWORD = "admin123";
 
 /* =========================
-   DB CONNECTION (FIXED)
+   DB CONNECTION (IMPORTANT FIX)
 ========================= */
-mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/prolific")
+
+if (!process.env.MONGO_URI) {
+  console.error("❌ MONGO_URI not set in environment variables");
+  process.exit(1);
+}
+
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB Connected"))
   .catch(err => {
     console.error("❌ MongoDB Error:", err);
@@ -66,11 +72,12 @@ const partnershipSchema = new mongoose.Schema({
 const Partnership = mongoose.model("Partnership", partnershipSchema);
 
 /* =========================
-   FILE UPLOAD
+   UPLOAD
 ========================= */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
+  filename: (req, file, cb) =>
+    cb(null, Date.now() + "-" + file.originalname)
 });
 
 const upload = multer({ storage });
@@ -97,7 +104,7 @@ app.post("/api/partnership", upload.single("proof"), async (req, res) => {
     const record = new Partnership({
       name: req.body.name,
       amount: req.body.amount,
-      proof: req.file ? req.file.path : null
+      proof: req.file ? req.file.filename : null
     });
 
     await record.save();
