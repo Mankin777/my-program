@@ -56,6 +56,7 @@ const playerSchema = new mongoose.Schema({
   zones: String,
   ip: String,
   color: String,
+  colorIndex: Number,
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -83,6 +84,52 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* =========================
+   🎡 SPIN WHEEL ENDPOINT (ADD THIS!)
+========================= */
+app.post("/play", async (req, res) => {
+  try {
+    const { name, zones } = req.body;
+    
+    if (!name || !zones) {
+      return res.status(400).json({ error: "Name and zone are required" });
+    }
+    
+    // Get client IP
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    
+    // Randomly select a color from the colors array
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    const selectedColor = colors[randomIndex];
+    
+    // Save player data to database
+    const player = new Player({
+      name: name,
+      normalizedName: name.toLowerCase(),
+      zones: zones,
+      ip: ip,
+      color: selectedColor,
+      colorIndex: randomIndex
+    });
+    
+    await player.save();
+    
+    // Return the result to the frontend
+    res.json({
+      success: true,
+      name: name,
+      zones: zones,
+      color: selectedColor,
+      index: randomIndex,
+      message: "Spin successful!"
+    });
+    
+  } catch (err) {
+    console.error("Error in /play:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
    ADMIN LOGIN
 ========================= */
 app.post("/api/admin/login", (req, res) => {
@@ -93,6 +140,61 @@ app.post("/api/admin/login", (req, res) => {
   }
 
   return res.status(401).json({ success: false });
+});
+
+/* =========================
+   GET ALL PLAYERS (ADMIN)
+========================= */
+app.get("/api/players", async (req, res) => {
+  try {
+    const players = await Player.find().sort({ createdAt: -1 });
+    res.json(players);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
+   RESET GAME (DELETE ALL PLAYERS)
+========================= */
+app.delete("/api/admin/players", async (req, res) => {
+  try {
+    await Player.deleteMany({});
+    res.json({ success: true, message: "All players deleted" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
+   ADD NEW COLOR (ADMIN)
+========================= */
+app.post("/api/admin/colors", async (req, res) => {
+  try {
+    const { name } = req.body;
+    
+    if (!name) {
+      return res.status(400).json({ error: "Color name required" });
+    }
+    
+    // Add to colors array
+    colors.push(name);
+    
+    res.json({ 
+      success: true, 
+      colors: colors,
+      message: `Color "${name}" added successfully!`
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* =========================
+   GET CURRENT COLORS LIST
+========================= */
+app.get("/api/colors", (req, res) => {
+  res.json({ colors: colors });
 });
 
 /* =========================
@@ -153,5 +255,7 @@ app.put("/api/partnership/:id", async (req, res) => {
    START SERVER
 ========================= */
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`🎨 Available colors: ${colors.join(", ")}`);
+  console.log(`🔐 Admin password: ${ADMIN_PASSWORD}`);
 });
