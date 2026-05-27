@@ -162,6 +162,14 @@ button {
    color:orange;
    font-size:25px;
 }
+.about-pic{
+    width: 40%;
+    max-width: 900px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 12px;
+    border: 2px solid orange;
+}
 </style>
 </head>
 <body>
@@ -198,6 +206,7 @@ button {
     </div>
 <div id="countdown" class="countdown-display"></div>
 <audio id="crowd" src="crowd.mp3"></audio>
+<img src="healing-streams.jpg" class="about-pic">
 <script>
     //open menu function
 function openMenu(){
@@ -318,7 +327,7 @@ links.forEach(link => {
 
 
 function updateCountdown() {
-    const targetDate = new Date("May 26, 2025 01:32:00").getTime();
+    const targetDate = new Date("July 24, 2026 14:00:00").getTime();
 
 
     const now = new Date().getTime();
@@ -327,7 +336,7 @@ function updateCountdown() {
 
     if (distance <= 0) {
         document.getElementById("countdown").innerHTML =
-            "🎉 Merry Christmas!";
+            "🎉 NO MORE SICKNESS!!<BR> IT'S THE HEALING STREAMS LIFE HEALING SERVICE<BR>WITH OUR MAN OF GOD PASTOR CHRIS";
 
         clearInterval(countdownInterval);
 
