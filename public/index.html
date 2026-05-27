@@ -641,7 +641,10 @@ async function play() {
         // 6 full rotations (2160°) + (index × 60°) to land on correct color
         const SEGMENT_DEGREES = 60;  // 360° ÷ 6 colors = 60° per color
         const FULL_ROTATIONS = 360 * 6; // 6 full spins
-        let degrees = FULL_ROTATIONS + (data.index * SEGMENT_DEGREES);
+console.log("Server response:", data);
+console.log("Index:", data.index);
+
+        let degrees = FULL_ROTATIONS + ((data.index || 0) * SEGMENT_DEGREES);
         
         const wheel = document.getElementById("wheel");
         wheel.style.transform = `rotate(${degrees}deg)`;
