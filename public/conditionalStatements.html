@@ -197,7 +197,7 @@ button {
         <div id="twoday" class="d-date"></div>
     </div>
 <div id="countdown" class="countdown-display"></div>
-<audio id="ticksound" src="crowd.mp3"></audio>
+<audio id="crowd" src="crowd.mp3"></audio>
 <script>
     //open menu function
 function openMenu(){
@@ -226,7 +226,6 @@ function closeMenu(){
         const minute = now.getMinutes();
         const second = now.getSeconds();
 // count down process equattion 
-timeLeft = targetDate - now;
 
         let message;
         var period;
@@ -315,7 +314,8 @@ links.forEach(link => {
     }
 });
 
-// countdon process
+// countdown process
+
 
 function updateCountdown() {
     const targetDate = new Date("May 26, 2025 01:32:00").getTime();
@@ -363,7 +363,7 @@ function celebration(){
     alert("The wait is over!");
 
     //document.body.style.backgroundColor = "gold";
-    document.getElementById("ticksound").play();
+    document.getElementById("crowd").play();
 }
 
 
