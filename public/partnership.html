@@ -7,18 +7,19 @@
 
 <style>
 body{
-    font-family: Arial;
+    font-family:Arial;
     background:#0d1b2a;
     color:white;
     padding:30px;
 }
 
 .container{
-    max-width:1000px;
+    max-width:1100px;
     margin:auto;
 }
 
-form{
+section{
+    margin-bottom:40px;
     background:#1b263b;
     padding:20px;
     border-radius:12px;
@@ -34,20 +35,18 @@ input, button{
 
 button{
     background:gold;
-    font-weight:bold;
     cursor:pointer;
+    font-weight:bold;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-    margin-top:30px;
-    background:#1b263b;
 }
 
-th, td{
-    padding:15px;
+th,td{
     border:1px solid #415a77;
+    padding:12px;
     text-align:center;
 }
 
@@ -55,24 +54,91 @@ th, td{
 .verified{color:lime;}
 .failed{color:red;}
 
-#loadMore{
-    margin-top:20px;
+#adminPanel{
+    display:none;
 }
+/*menu bar icon */
+.menu-links{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    padding-left:30px;
+}
+.menu-links button{
+    width:130px;
+    height:40px;
+    margin-left: 50px;
+}
+.menu-icon{
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.sidebar{
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: rgb(0, 0, 31);
+    transition: 0.4s;
+}
+button {
+    padding: 12px 20px;
+    background: rgb(0, 0, 31);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+}
+
+button:hover {
+    background: darkorange;
+}
+/*on selecting that particular active button related to <a>*/
+.menu-links a.active button {
+    border: 2px solid darkorange;
+}
+
 </style>
 </head>
 <body>
+      <!--menu bar, dropdown selection-->
+
+<div class="menu-icon" onclick="openMenu()">☰</div> 
+<div class="menu-icon" style ="margin-left: 30px;" onclick="closeMenu()">↩️</div>
+<div id="sidebar" class="sidebar">
+<br>
+  <br>
+   <br>
+  <br>
+
+  <nav class="menu-links" >
+    <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
+     <a href="conform.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
+     <a href="partnership.html" ><button style =" color: white; margin-left: 30px;"><b>Givings 🤝</b></button></a><br>
+     <a href="aboutUs.html"  ><button style ="color: white; margin-left: 30px;"><b>About US</b><span style="font-size: large;" >👥</span></button></a><br>
+     </nav>
+</div>
 
 <div class="container">
 
+<section>
 <h1>Prolific Teens & Youth Partnership</h1>
 
 <form id="partnershipForm">
-    <input type="text" name="name" placeholder="Full Name" required>
-    <input type="number" name="amount" placeholder="Amount" required>
-    <input type="file" name="proof">
-    <button type="submit">Submit</button>
+<input type="text" name="name" placeholder="Full Name" required>
+<input type="number" name="amount" placeholder="Amount" required>
+<input type="file" name="proof">
+<button type="submit">Submit Partnership</button>
 </form>
+</section>
 
+<section>
 <h2>Partnership Records</h2>
 
 <table>
@@ -88,49 +154,64 @@ th, td{
 </table>
 
 <button id="loadMore">Load More</button>
+</section>
 
-<h2>Partnership Verification</h2>
+<section>
+<h2>Admin Login</h2>
+
+<input type="password" id="adminPassword" placeholder="Admin Password">
+<button onclick="loginAdmin()">Login</button>
+</section>
+
+<section id="adminPanel">
+<h2>Admin Verification Panel</h2>
 <div id="adminRecords"></div>
+</section>
 
 </div>
 
 <script>
-let page = 1;
+    //open menu function
+function openMenu(){
+  document.getElementById("sidebar").style.left = "0";
+}
+function closeMenu(){
+  document.getElementById("sidebar").style.left = "-250px";
+}
+
+let page=1;
+let adminLoggedIn=false;
 
 document.getElementById("partnershipForm").addEventListener("submit", async e=>{
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    const formData=new FormData(e.target);
 
-    const res = await fetch("/api/partnership",{
+    const res=await fetch("/api/partnership",{
         method:"POST",
         body:formData
     });
 
-    const data = await res.json();
+    const data=await res.json();
     alert(data.message);
 
     e.target.reset();
-    page=1;
-    document.getElementById("records").innerHTML="";
-    loadRecords();
 });
 
 async function loadRecords(){
-    const res = await fetch(`/api/partnerships?page=${page}`);
-    const data = await res.json();
+    const res=await fetch(`/api/partnerships?page=${page}`);
+    const data=await res.json();
 
-    const tbody = document.getElementById("records");
+    const tbody=document.getElementById("records");
 
     data.forEach(item=>{
-        tbody.innerHTML += `
+        tbody.innerHTML+=`
         <tr>
-            <td>${item.name}</td>
-            <td>₦${item.amount}</td>
-            <td class="${item.status}">${item.status}</td>
-            <td>${new Date(item.createdAt).toLocaleDateString()}</td>
-        </tr>
-        `;
+        <td>${item.name}</td>
+        <td>₦${item.amount}</td>
+        <td class="${item.status}">${item.status}</td>
+        <td>${new Date(item.createdAt).toLocaleDateString()}</td>
+        </tr>`;
     });
 }
 
@@ -139,115 +220,53 @@ document.getElementById("loadMore").addEventListener("click",()=>{
     loadRecords();
 });
 
-loadRecords();
+async function loginAdmin(){
 
-const partnershipSchema = new mongoose.Schema({
-    name:String,
-    amount:Number,
-    proof:String,
-    status:{
-        type:String,
-        default:"pending"
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now
-    }
-});
+    const password=document.getElementById("adminPassword").value;
 
-const Partnership = mongoose.model("Partnership", partnershipSchema);
-
-const storage = multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,"uploads/");
-    },
-    filename:(req,file,cb)=>{
-        cb(null,Date.now()+"-"+file.originalname);
-    }
-});
-
-const upload = multer({storage});
-
-app.post("/api/partnership", upload.single("proof"), async(req,res)=>{
-    try{
-        const record = new Partnership({
-            name:req.body.name,
-            amount:req.body.amount,
-            proof:req.file ? req.file.path : null
-        });
-
-        await record.save();
-
-        res.json({
-            success:true,
-            message:"Submission received. Awaiting verification."
-        });
-
-    }catch(err){
-        res.json({
-            success:false,
-            message:"Submission failed."
-        });
-    }
-});
-
-app.get("/api/partnerships", async(req,res)=>{
-
-    const page = parseInt(req.query.page) || 1;
-    const limit = 10;
-    const skip = (page - 1) * limit;
-
-    const records = await Partnership.find()
-        .sort({createdAt:-1})
-        .skip(skip)
-        .limit(limit);
-
-    res.json(records);
-});
-
-
-app.put("/api/partnership/:id", async(req,res)=>{
-
-    await Partnership.findByIdAndUpdate(req.params.id,{
-        status:req.body.status
+    const res=await fetch("/api/admin/login",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({password})
     });
 
-    res.json({success:true});
-});
+    const data=await res.json();
+
+    if(data.success){
+        adminLoggedIn=true;
+        document.getElementById("adminPanel").style.display="block";
+        loadAdminPartnerships();
+    }else{
+        alert("Invalid admin password");
+    }
+}
 
 async function loadAdminPartnerships(){
 
-    const res = await fetch("/api/partnerships?page=1");
-    const data = await res.json();
+    const res=await fetch("/api/partnerships?page=1");
+    const data=await res.json();
 
-    let html = "<table border='1' width='100%'>";
-    html += `
-    <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-    `;
+    let html="<table><tr><th>Name</th><th>Amount</th><th>Status</th><th>Actions</th></tr>";
 
     data.forEach(item=>{
-        html += `
+        html+=`
         <tr>
-            <td>${item.name}</td>
-            <td>₦${item.amount}</td>
-            <td>${item.status}</td>
-            <td>
-                <button onclick="updateStatus('${item._id}','verified')">Verify</button>
-                <button onclick="updateStatus('${item._id}','failed')">Fail</button>
-                <button onclick="updateStatus('${item._id}','pending')">Pending</button>
-            </td>
-        </tr>
-        `;
+        <td>${item.name}</td>
+        <td>₦${item.amount}</td>
+        <td>${item.status}</td>
+        <td>
+        <button onclick="updateStatus('${item._id}','verified')">Verify</button>
+        <button onclick="updateStatus('${item._id}','failed')">Fail</button>
+        <button onclick="updateStatus('${item._id}','pending')">Pending</button>
+        </td>
+        </tr>`;
     });
 
-    html += "</table>";
+    html+="</table>";
 
-    document.getElementById("adminRecords").innerHTML = html;
+    document.getElementById("adminRecords").innerHTML=html;
 }
 
 async function updateStatus(id,status){
@@ -263,7 +282,20 @@ async function updateStatus(id,status){
     loadAdminPartnerships();
 }
 
-loadAdminPartnerships();
+loadRecords();
+
+// javascript url for the border line selection when on  particular page for each button
+document.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll(".menu-links a");
+    const currentPage = window.location.pathname.split("/").pop();
+
+    links.forEach(link => {
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("active");
+        }
+    });
+});
+
 </script>
 
 </body>
