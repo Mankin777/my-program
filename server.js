@@ -3,14 +3,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const mongoose = require("mongoose");
+const multer = require("multer");
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
+app.use("/uploads", express.static("uploads"));
 
-// 🎨 Colors (6 segments) - UPDATED ORDER
+// 🎨 Colors
 const colors = ["Red", "Purple", "White", "Pink", "Green", "Yellow"];
 
-const ADMIN_PASSWORD = "admin123";
+// Admin password
+const ADMIN_PASSWORD = "prolific2026";
 
 // ✅ MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -21,18 +25,16 @@ mongoose.connect(process.env.MONGO_URI)
    🧠 HELPER FUNCTIONS
 ========================= */
 
-// Normalize name (remove spaces + lowercase)
 function normalizeName(name) {
   return name.toLowerCase().replace(/\s+/g, "").trim();
 }
 
-// Check similarity (anti-cheat)
 function isSimilarName(name1, name2) {
   return name1.includes(name2) || name2.includes(name1);
 }
 
 /* =========================
-   🧱 SCHEMA
+   🧱 PLAYER SCHEMA
 ========================= */
 
 const playerSchema = new mongoose.Schema({
@@ -50,6 +52,37 @@ const playerSchema = new mongoose.Schema({
 const Player = mongoose.model("Player", playerSchema);
 
 /* =========================
+   🤝 PARTNERSHIP SCHEMA
+========================= */
+
+const partnershipSchema = new mongoose.Schema({
+  name: String,
+  amount: Number,
+  proof: String,
+  status: {
+    type: String,
+    default: "pending"
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const Partnership = mongoose.model("Partnership", partnershipSchema);
+
+/* =========================
+   📂 FILE UPLOAD
+========================= */
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname)
+});
+
+const upload = multer({ storage });
+
+/* =========================
    🔐 ADMIN LOGIN
 ========================= */
 
@@ -64,7 +97,7 @@ app.post("/api/admin/login", (req, res) => {
 });
 
 /* =========================
-   🎡 PLAY ROUTE (ANTI-CHEAT)
+   🎡 PLAY ROUTE
 ========================= */
 
 app.post("/play", async (req, res) => {
@@ -81,7 +114,6 @@ app.post("/play", async (req, res) => {
     req.socket.remoteAddress;
 
   try {
-    // 🔍 1. Check same IP + similar name
     const playersFromSameIP = await Player.find({ ip: userIP });
 
     for (let player of playersFromSameIP) {
@@ -92,7 +124,6 @@ app.post("/play", async (req, res) => {
       }
     }
 
-    // 🔍 2. Check same name + same zone
     const existingSameZone = await Player.findOne({
       normalizedName,
       zones
@@ -104,7 +135,6 @@ app.post("/play", async (req, res) => {
       });
     }
 
-    // 🎡 Spin result (0 to 5 index)
     const randomIndex = Math.floor(Math.random() * colors.length);
     const randomColor = colors[randomIndex];
 
@@ -123,20 +153,18 @@ app.post("/play", async (req, res) => {
       name,
       zones,
       color: randomColor,
-      index: randomIndex // 🔥 0=Red,1=White,2=Green,3=Yellow,4=Purple,5=Pink
+      index: randomIndex
     });
 
   } catch (err) {
-    console.error("FULL ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
 /* =========================
-   📊 ADMIN ROUTES
+   📊 PLAYER ADMIN ROUTES
 ========================= */
 
-// Get players
 app.get("/api/players", async (req, res) => {
   try {
     const players = await Player.find().sort({ createdAt: -1 });
@@ -146,7 +174,6 @@ app.get("/api/players", async (req, res) => {
   }
 });
 
-// Reset players
 app.delete("/api/admin/players", async (req, res) => {
   try {
     await Player.deleteMany({});
@@ -156,11 +183,64 @@ app.delete("/api/admin/players", async (req, res) => {
   }
 });
 
-// Add new color
 app.post("/api/admin/colors", (req, res) => {
   const { name } = req.body;
   colors.push(name);
   res.json({ message: `Added ${name}` });
+});
+
+/* =========================
+   🤝 PARTNERSHIP ROUTES
+========================= */
+
+app.post("/api/partnership", upload.single("proof"), async (req, res) => {
+  try {
+    const record = new Partnership({
+      name: req.body.name,
+      amount: req.body.amount,
+      proof: req.file ? req.file.path : null
+    });
+
+    await record.save();
+
+    res.json({
+      success: true,
+      message: "Submission received"
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/partnerships", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+
+    const records = await Partnership.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    res.json(records);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put("/api/partnership/:id", async (req, res) => {
+  try {
+    await Partnership.findByIdAndUpdate(req.params.id, {
+      status: req.body.status
+    });
+
+    res.json({ success: true });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 /* =========================

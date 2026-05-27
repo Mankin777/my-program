@@ -86,6 +86,7 @@
         flex-wrap: wrap;
         text-align: center;
         z-index: 13;
+        -webkit-text-size-adjust: 20px;
     }
     button:hover {
     background: darkorange;
@@ -99,8 +100,10 @@
         flex-wrap: wrap;
         text-align: center;
         margin-top: 10px;
-        font-size: 20px;
+        font-size: 10px;
+        -webkit-text-size-adjust: 20px;
         z-index: 13;
+
     }
 
     body {
@@ -325,7 +328,7 @@ links.forEach(link => {
 
 // countdown process
 
-
+//July 24, 2026 14:00:00
 function updateCountdown() {
     const targetDate = new Date("July 24, 2026 14:00:00").getTime();
 

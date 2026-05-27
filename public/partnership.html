@@ -1,129 +1,270 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>
-PARTNERSHIPS & GIVINGS 🤝
-        </title>
-      <style>
-        /* HEADER */
-.ministry-header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  padding: 1.5rem;
-  border-bottom: 4px solid gold;
-  border-top: 4px solid gold;
-  margin-bottom: 2rem;
-}
-/*Created by King 😁*/
-/*menu bar icon */
-.menu-links{
-    display:flex;
-    flex-direction:column;
-    gap:5px;
-    padding-left:30px;
-}
-.menu-links button{
-    width:130px;
-    height:40px;
-    margin-left: 50px;
-}
-.menu-icon{
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    font-size: 30px;
-    cursor: pointer;
-    z-index: 1000;
-    color: white;
-}
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partnership Portal</title>
 
-.sidebar{
-    position: fixed;
-    top: 0;
-    left: -250px;
-    width: 250px;
-    height: 100%;
-    background: rgb(0, 0, 31);
-    transition: 0.4s;
-}
-button {
-    padding: 12px 20px;
-    background: rgb(0, 0, 31);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    color: white;
-}
-
-button:hover {
-    background: darkorange;
-}
-/*on selecting that particular active button related to <a>*/
-.menu-links a.active button {
-    border: 2px solid darkorange;
-}
-.ministry-title h1 {
-  font-size: 1.3rem;
-  background: linear-gradient(135deg, #fff, #ffd700);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-body {
+<style>
+body{
     font-family: Arial;
-    background: linear-gradient(135deg, #1e1e2f, #3a3a5f);
-    color: white;
-    text-align: center;
+    background:#0d1b2a;
+    color:white;
+    padding:30px;
 }
-      </style> 
-    </head>
 
+.container{
+    max-width:1000px;
+    margin:auto;
+}
 
-    <body>
-          <!--menu bar, dropdown selection-->
+form{
+    background:#1b263b;
+    padding:20px;
+    border-radius:12px;
+}
 
-<div class="menu-icon" onclick="openMenu()">☰</div> 
-<div class="menu-icon" style ="margin-left: 30px;" onclick="closeMenu()">↩️</div>
-<div id="sidebar" class="sidebar">
-<br>
-  <br>
-   <br>
-  <br>
+input, button{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+}
 
-  <nav class="menu-links" >
-    <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
-     <a href="conform.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
-     <a href="partnership.html" ><button style =" color: white; margin-left: 30px;"><b>Givings 🤝</b></button></a><br>
-     <a href="aboutUs.html"  ><button style ="color: white; margin-left: 30px;"><b>About US</b><span style="font-size: large;" >👥</span></button></a><br>
-     </nav>
+button{
+    background:gold;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:30px;
+    background:#1b263b;
+}
+
+th, td{
+    padding:15px;
+    border:1px solid #415a77;
+    text-align:center;
+}
+
+.pending{color:orange;}
+.verified{color:lime;}
+.failed{color:red;}
+
+#loadMore{
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Prolific Teens & Youth Partnership</h1>
+
+<form id="partnershipForm">
+    <input type="text" name="name" placeholder="Full Name" required>
+    <input type="number" name="amount" placeholder="Amount" required>
+    <input type="file" name="proof">
+    <button type="submit">Submit</button>
+</form>
+
+<h2>Partnership Records</h2>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody id="records"></tbody>
+</table>
+
+<button id="loadMore">Load More</button>
+
+<h2>Partnership Verification</h2>
+<div id="adminRecords"></div>
+
 </div>
 
+<script>
+let page = 1;
 
-        <header class="ministry-header">
-  <div class="ministry-title">
-    <h1>✝️ PARTNERSHIPS & GIVINGS 🤝 ✝️</h1>
-    <p></p>
-  </div>
-</header>
-        <script>
-//open menu function
-function openMenu(){
-  document.getElementById("sidebar").style.left = "0";
-}
-function closeMenu(){
-  document.getElementById("sidebar").style.left = "-250px";
-}
+document.getElementById("partnershipForm").addEventListener("submit", async e=>{
+    e.preventDefault();
 
-// javascript url for the border line selection when on  particular page for each button
-document.addEventListener("DOMContentLoaded", () => {
-    const links = document.querySelectorAll(".menu-links a");
-    const currentPage = window.location.pathname.split("/").pop();
+    const formData = new FormData(e.target);
 
-    links.forEach(link => {
-        if (link.getAttribute("href") === currentPage) {
-            link.classList.add("active");
-        }
+    const res = await fetch("/api/partnership",{
+        method:"POST",
+        body:formData
     });
+
+    const data = await res.json();
+    alert(data.message);
+
+    e.target.reset();
+    page=1;
+    document.getElementById("records").innerHTML="";
+    loadRecords();
 });
-        </script>
-    </body>
-    
+
+async function loadRecords(){
+    const res = await fetch(`/api/partnerships?page=${page}`);
+    const data = await res.json();
+
+    const tbody = document.getElementById("records");
+
+    data.forEach(item=>{
+        tbody.innerHTML += `
+        <tr>
+            <td>${item.name}</td>
+            <td>₦${item.amount}</td>
+            <td class="${item.status}">${item.status}</td>
+            <td>${new Date(item.createdAt).toLocaleDateString()}</td>
+        </tr>
+        `;
+    });
+}
+
+document.getElementById("loadMore").addEventListener("click",()=>{
+    page++;
+    loadRecords();
+});
+
+loadRecords();
+
+const partnershipSchema = new mongoose.Schema({
+    name:String,
+    amount:Number,
+    proof:String,
+    status:{
+        type:String,
+        default:"pending"
+    },
+    createdAt:{
+        type:Date,
+        default:Date.now
+    }
+});
+
+const Partnership = mongoose.model("Partnership", partnershipSchema);
+
+const storage = multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,"uploads/");
+    },
+    filename:(req,file,cb)=>{
+        cb(null,Date.now()+"-"+file.originalname);
+    }
+});
+
+const upload = multer({storage});
+
+app.post("/api/partnership", upload.single("proof"), async(req,res)=>{
+    try{
+        const record = new Partnership({
+            name:req.body.name,
+            amount:req.body.amount,
+            proof:req.file ? req.file.path : null
+        });
+
+        await record.save();
+
+        res.json({
+            success:true,
+            message:"Submission received. Awaiting verification."
+        });
+
+    }catch(err){
+        res.json({
+            success:false,
+            message:"Submission failed."
+        });
+    }
+});
+
+app.get("/api/partnerships", async(req,res)=>{
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    const records = await Partnership.find()
+        .sort({createdAt:-1})
+        .skip(skip)
+        .limit(limit);
+
+    res.json(records);
+});
+
+
+app.put("/api/partnership/:id", async(req,res)=>{
+
+    await Partnership.findByIdAndUpdate(req.params.id,{
+        status:req.body.status
+    });
+
+    res.json({success:true});
+});
+
+async function loadAdminPartnerships(){
+
+    const res = await fetch("/api/partnerships?page=1");
+    const data = await res.json();
+
+    let html = "<table border='1' width='100%'>";
+    html += `
+    <tr>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    `;
+
+    data.forEach(item=>{
+        html += `
+        <tr>
+            <td>${item.name}</td>
+            <td>₦${item.amount}</td>
+            <td>${item.status}</td>
+            <td>
+                <button onclick="updateStatus('${item._id}','verified')">Verify</button>
+                <button onclick="updateStatus('${item._id}','failed')">Fail</button>
+                <button onclick="updateStatus('${item._id}','pending')">Pending</button>
+            </td>
+        </tr>
+        `;
+    });
+
+    html += "</table>";
+
+    document.getElementById("adminRecords").innerHTML = html;
+}
+
+async function updateStatus(id,status){
+
+    await fetch(`/api/partnership/${id}`,{
+        method:"PUT",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({status})
+    });
+
+    loadAdminPartnerships();
+}
+
+loadAdminPartnerships();
+</script>
+
+</body>
 </html>
