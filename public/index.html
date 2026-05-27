@@ -631,6 +631,12 @@ async function play() {
 
         let data = await res.json();
 
+if (data.error) {
+    document.getElementById("result").innerHTML =
+    `<span style="color:red;">${data.error}</span>`;
+    return;
+}
+
         if (data.error) {
             document.getElementById("result").innerHTML =
             `<span style="color:red;">${data.error}</span>`;
