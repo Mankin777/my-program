@@ -604,19 +604,16 @@ async function loginToAdmin() {
 }
 
 // 🎡 PLAY FUNCTION - UPDATED for 6 colors (60° each)
+// 🎡 PLAY FUNCTION - Fixed for your server
 async function play() {
-//to set username
-   const username =
-        document.getElementById("name").value;
-
+    const username = document.getElementById("name").value;
     localStorage.setItem("u-name", username);
 
     let name = document.getElementById("name").value;
     let zones = document.getElementById("zones").value;
 
     if (!name || !zones) {
-        document.getElementById("result").innerHTML =
-        "<span style='color:red;'>⚠️ Fill all fields</span>";
+        document.getElementById("result").innerHTML = "<span style='color:red;'>⚠️ Fill all fields</span>";
         return;
     }
 
@@ -631,32 +628,22 @@ async function play() {
 
         let data = await res.json();
 
-if (data.error) {
-    document.getElementById("result").innerHTML =
-    `<span style="color:red;">${data.error}</span>`;
-    return;
-}
-
         if (data.error) {
-            document.getElementById("result").innerHTML =
-            `<span style="color:red;">${data.error}</span>`;
+            document.getElementById("result").innerHTML = `<span style="color:red;">${data.error}</span>`;
             return;
         }
 
-        // 🎡 SPIN - 6 colors means each segment is 60°
-        // 6 full rotations (2160°) + (index × 60°) to land on correct color
-        const SEGMENT_DEGREES = 60;  // 360° ÷ 6 colors = 60° per color
-        const FULL_ROTATIONS = 360 * 6; // 6 full spins
-console.log("Server response:", data);
-console.log("Index:", data.index);
 
+        // 🎡 SPIN - 6 colors means each segment is 60°
+        const SEGMENT_DEGREES = 360 / 6; // 60°
+        const FULL_ROTATIONS = 360 * 6; // 6 full spins
         let degrees = FULL_ROTATIONS + ((data.index || 0) * SEGMENT_DEGREES);
-        
+
         const wheel = document.getElementById("wheel");
         wheel.style.transform = `rotate(${degrees}deg)`;
 
- //Mark that spin was successful
-hasSpunSuccessfully = true;
+        // Mark that spin was successful
+        hasSpunSuccessfully = true;
 
         // 🎉 SHOW RESULT AFTER SPIN
         setTimeout(() => {
@@ -668,15 +655,15 @@ hasSpunSuccessfully = true;
             `;
         }, 4000);
 
-    }      catch (err) {
-        document.getElementById("result").innerHTML =
-        "<span style='color:red;'>❌ Error occurred</span>";
-        
+    } catch (err) {
+        console.error("Error:", err);
+        document.getElementById("result").innerHTML = "<span style='color:red;'>❌ Error occurred. Make sure server is running!</span>";
         return false;
     }
 
     return true;
 }
+
 
 
 // ADMIN FUNCTIONS
