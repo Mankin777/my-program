@@ -7,10 +7,11 @@
 
 <style>
 body{
-    font-family:Arial;
+    font-family: Arial, sans-serif;
     background:#0d1b2a;
     color:white;
     padding:30px;
+    margin:0;
 }
 
 .container{
@@ -31,6 +32,7 @@ input, button{
     margin:10px 0;
     border:none;
     border-radius:8px;
+    box-sizing:border-box;
 }
 
 button{
@@ -39,15 +41,26 @@ button{
     font-weight:bold;
 }
 
+button:hover{
+    background:darkorange;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+    width:100%;
+}
+
 table{
     width:100%;
     border-collapse:collapse;
+    table-layout:fixed;
 }
 
 th,td{
     border:1px solid #415a77;
     padding:12px;
     text-align:center;
+    word-wrap:break-word;
 }
 
 .pending{color:orange;}
@@ -57,72 +70,53 @@ th,td{
 #adminPanel{
     display:none;
 }
-/*menu bar icon */
+
+/* MENU */
 .menu-links{
     display:flex;
     flex-direction:column;
-    gap:5px;
+    gap:10px;
     padding-left:30px;
 }
-.menu-links button{
-    width:130px;
-    height:40px;
-    margin-left: 50px;
-}
+
 .menu-icon{
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    font-size: 30px;
-    cursor: pointer;
-    z-index: 1000;
+    position:fixed;
+    top:15px;
+    left:15px;
+    font-size:30px;
+    cursor:pointer;
+    z-index:1000;
 }
 
 .sidebar{
-    position: fixed;
-    top: 0;
-    left: -250px;
-    width: 250px;
-    height: 100%;
-    background: rgb(0, 0, 31);
-    transition: 0.4s;
-}
-button {
-    padding: 12px 20px;
-    background: rgb(0, 0, 31);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    color: white;
+    position:fixed;
+    top:0;
+    left:-250px;
+    width:250px;
+    height:100%;
+    background:rgb(0,0,31);
+    transition:0.4s;
+    padding-top:60px;
 }
 
-button:hover {
-    background: darkorange;
+.menu-links a.active button{
+    border:2px solid darkorange;
 }
-/*on selecting that particular active button related to <a>*/
-.menu-links a.active button {
-    border: 2px solid darkorange;
-}
-
 </style>
 </head>
 <body>
-      <!--menu bar, dropdown selection-->
 
-<div class="menu-icon" onclick="openMenu()">☰</div> 
-<div class="menu-icon" style ="margin-left: 30px;" onclick="closeMenu()">↩️</div>
+<!-- MENU -->
+<div class="menu-icon" onclick="openMenu()">☰</div>
+<div class="menu-icon" style="margin-left:40px;" onclick="closeMenu()">↩️</div>
+
 <div id="sidebar" class="sidebar">
-<br>
-  <br>
-   <br>
-  <br>
-
-  <nav class="menu-links" >
-    <a href="index.html" ><button style =" color: white; margin-left: 30px;"><b>Home 🏠</b></button></a><br>
-     <a href="conform.html" ><button style =" color: white; margin-left: 30px;"><b>📞ontact_us</b></button></a><br>
-     <a href="partnership.html" ><button style =" color: white; margin-left: 30px;"><b>Givings 🤝</b></button></a><br>
-     <a href="aboutUs.html"  ><button style ="color: white; margin-left: 30px;"><b>About US</b><span style="font-size: large;" >👥</span></button></a><br>
-     </nav>
+<nav class="menu-links">
+<a href="index.html"><button>Home 🏠</button></a>
+<a href="conform.html"><button>📞 Contact Us</button></a>
+<a href="partnership.html"><button>Givings 🤝</button></a>
+<a href="aboutUs.html"><button>About Us 👥</button></a>
+</nav>
 </div>
 
 <div class="container">
@@ -132,8 +126,21 @@ button:hover {
 
 <form id="partnershipForm">
 <input type="text" name="name" placeholder="Full Name" required>
+
 <input type="number" name="amount" placeholder="Amount" required>
+
+<label>Partnership Arm:</label>
+<input list="arms" name="arms" id="arm" placeholder="Select or type partnership arm" required>
+
+<datalist id="arms">
+<option value="Rhapsody">
+<option value="Church Contributions">
+<option value="Technical Support">
+<option value="Inner City Missions">
+</datalist>
+
 <input type="file" name="proof">
+
 <button type="submit">Submit Partnership</button>
 </form>
 </section>
@@ -141,24 +148,26 @@ button:hover {
 <section>
 <h2>Partnership Records</h2>
 
+<div class="table-wrapper">
 <table>
 <thead>
 <tr>
 <th>Name</th>
 <th>Amount</th>
+<th>Arm</th>
 <th>Status</th>
 <th>Date</th>
 </tr>
 </thead>
 <tbody id="records"></tbody>
 </table>
+</div>
 
 <button id="loadMore">Load More</button>
 </section>
 
 <section>
 <h2>Admin Login</h2>
-
 <input type="password" id="adminPassword" placeholder="Admin Password">
 <button onclick="loginAdmin()">Login</button>
 </section>
@@ -171,17 +180,18 @@ button:hover {
 </div>
 
 <script>
-    //open menu function
+// MENU
 function openMenu(){
-  document.getElementById("sidebar").style.left = "0";
+    document.getElementById("sidebar").style.left="0";
 }
+
 function closeMenu(){
-  document.getElementById("sidebar").style.left = "-250px";
+    document.getElementById("sidebar").style.left="-250px";
 }
 
 let page=1;
-let adminLoggedIn=false;
 
+// FORM SUBMIT
 document.getElementById("partnershipForm").addEventListener("submit", async e=>{
     e.preventDefault();
 
@@ -196,8 +206,12 @@ document.getElementById("partnershipForm").addEventListener("submit", async e=>{
     alert(data.message);
 
     e.target.reset();
+    page=1;
+    document.getElementById("records").innerHTML="";
+    loadRecords();
 });
 
+// LOAD RECORDS
 async function loadRecords(){
     const res=await fetch(`/api/partnerships?page=${page}`);
     const data=await res.json();
@@ -207,10 +221,11 @@ async function loadRecords(){
     data.forEach(item=>{
         tbody.innerHTML+=`
         <tr>
-        <td>${item.name}</td>
-        <td>₦${item.amount}</td>
-        <td class="${item.status}">${item.status}</td>
-        <td>${new Date(item.createdAt).toLocaleDateString()}</td>
+            <td>${item.name}</td>
+            <td>₦${item.amount}</td>
+            <td>${item.arms || "-"}</td>
+            <td class="${item.status}">${item.status}</td>
+            <td>${new Date(item.createdAt).toLocaleDateString()}</td>
         </tr>`;
     });
 }
@@ -220,8 +235,8 @@ document.getElementById("loadMore").addEventListener("click",()=>{
     loadRecords();
 });
 
+// ADMIN LOGIN
 async function loginAdmin(){
-
     const password=document.getElementById("adminPassword").value;
 
     const res=await fetch("/api/admin/login",{
@@ -235,7 +250,6 @@ async function loginAdmin(){
     const data=await res.json();
 
     if(data.success){
-        adminLoggedIn=true;
         document.getElementById("adminPanel").style.display="block";
         loadAdminPartnerships();
     }else{
@@ -243,34 +257,44 @@ async function loginAdmin(){
     }
 }
 
+// ADMIN RECORDS
 async function loadAdminPartnerships(){
-
     const res=await fetch("/api/partnerships?page=1");
     const data=await res.json();
 
-    let html="<table><tr><th>Name</th><th>Amount</th><th>Status</th><th>Actions</th></tr>";
+    let html=`
+    <div class="table-wrapper">
+    <table>
+    <tr>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Arm</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>`;
 
     data.forEach(item=>{
         html+=`
         <tr>
-        <td>${item.name}</td>
-        <td>₦${item.amount}</td>
-        <td>${item.status}</td>
-        <td>
-        <button onclick="updateStatus('${item._id}','verified')">Verify</button>
-        <button onclick="updateStatus('${item._id}','failed')">Fail</button>
-        <button onclick="updateStatus('${item._id}','pending')">Pending</button>
-        </td>
+            <td>${item.name}</td>
+            <td>₦${item.amount}</td>
+            <td>${item.arms || "-"}</td>
+            <td>${item.status}</td>
+            <td>
+                <button onclick="updateStatus('${item._id}','verified')">Verify</button>
+                <button onclick="updateStatus('${item._id}','failed')">Fail</button>
+                <button onclick="updateStatus('${item._id}','pending')">Pending</button>
+            </td>
         </tr>`;
     });
 
-    html+="</table>";
+    html+="</table></div>";
 
     document.getElementById("adminRecords").innerHTML=html;
 }
 
+// UPDATE STATUS
 async function updateStatus(id,status){
-
     await fetch(`/api/partnership/${id}`,{
         method:"PUT",
         headers:{
@@ -280,22 +304,25 @@ async function updateStatus(id,status){
     });
 
     loadAdminPartnerships();
+
+    page=1;
+    document.getElementById("records").innerHTML="";
+    loadRecords();
 }
 
 loadRecords();
 
-// javascript url for the border line selection when on  particular page for each button
-document.addEventListener("DOMContentLoaded", () => {
-    const links = document.querySelectorAll(".menu-links a");
-    const currentPage = window.location.pathname.split("/").pop();
+// ACTIVE MENU
+document.addEventListener("DOMContentLoaded",()=>{
+    const links=document.querySelectorAll(".menu-links a");
+    const currentPage=window.location.pathname.split("/").pop();
 
-    links.forEach(link => {
-        if (link.getAttribute("href") === currentPage) {
+    links.forEach(link=>{
+        if(link.getAttribute("href")===currentPage){
             link.classList.add("active");
         }
     });
 });
-
 </script>
 
 </body>
