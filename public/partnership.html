@@ -61,6 +61,9 @@ th,td{
     padding:12px;
     text-align:center;
     word-wrap:break-word;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:180px;
 }
 
 .pending{color:orange;}
@@ -175,11 +178,30 @@ th,td{
 <section id="adminPanel">
 <h2>Admin Verification Panel</h2>
 <div id="adminRecords"></div>
+<button onclick="clearAllRecords()">Clear All Records</button>
 </section>
 
 </div>
 
 <script>
+    async function deleteRecord(id) {
+    await fetch(`/api/partnership/${id}`, {
+        method: "DELETE"
+    });
+
+    loadAdminPartnerships();
+}
+
+async function clearAllRecords() {
+    if (!confirm("Delete all records?")) return;
+
+    await fetch("/api/partnerships", {
+        method: "DELETE"
+    });
+
+    document.getElementById("records").innerHTML = "";
+    loadAdminPartnerships();
+}
 // MENU
 function openMenu(){
     document.getElementById("sidebar").style.left="0";
@@ -284,6 +306,7 @@ async function loadAdminPartnerships(){
                 <button onclick="updateStatus('${item._id}','verified')">Verify</button>
                 <button onclick="updateStatus('${item._id}','failed')">Fail</button>
                 <button onclick="updateStatus('${item._id}','pending')">Pending</button>
+                <button onclick="deleteRecord('${item._id}')">Delete</button>
             </td>
         </tr>`;
     });
@@ -323,6 +346,25 @@ document.addEventListener("DOMContentLoaded",()=>{
         }
     });
 });
+
+async function deleteRecord(id) {
+    await fetch(`/api/partnership/${id}`, {
+        method: "DELETE"
+    });
+
+    loadAdminPartnerships();
+}
+
+async function clearAllRecords() {
+    if (!confirm("Delete all records?")) return;
+
+    await fetch("/api/partnerships", {
+        method: "DELETE"
+    });
+
+    document.getElementById("records").innerHTML = "";
+    loadAdminPartnerships();
+}
 </script>
 
 </body>

@@ -65,6 +65,7 @@ const Player = mongoose.model("Player", playerSchema);
 const partnershipSchema = new mongoose.Schema({
   name: String,
   amount: Number,
+  arms: String,
   proof: String,
   status: { type: String, default: "pending" },
   createdAt: { type: Date, default: Date.now }
@@ -203,11 +204,12 @@ app.get("/api/colors", (req, res) => {
 
 app.post("/api/partnership", upload.single("proof"), async (req, res) => {
   try {
-    const record = new Partnership({
-      name: req.body.name,
-      amount: req.body.amount,
-      proof: req.file ? req.file.filename : null
-    });
+   const record = new Partnership({
+  name: req.body.name,
+  amount: req.body.amount,
+  arms: req.body.arms,
+  proof: req.file ? req.file.filename : null
+});
 
     await record.save();
 
@@ -259,3 +261,52 @@ app.listen(PORT, () => {
   console.log(`🎨 Available colors: ${colors.join(", ")}`);
   console.log(`🔐 Admin password: ${ADMIN_PASSWORD}`);
 });
+
+app.delete("/api/partnership/:id", async (req, res) => {
+  try {
+    const record = await Partnership.findById(req.params.id);
+
+    if (record?.proof) {
+      const filePath = `uploads/${record.proof}`;
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+    }
+
+    await Partnership.findByIdAndDelete(req.params.id);
+
+    res.json({
+      success: true,
+      message: "Record deleted"
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete("/api/partnerships", async (req, res) => {
+  try {
+    const records = await Partnership.find();
+
+    records.forEach(record => {
+      if (record.proof) {
+        const filePath = `uploads/${record.proof}`;
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+    });
+
+    await Partnership.deleteMany({});
+
+    res.json({
+      success: true,
+      message: "All partnership records cleared"
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
